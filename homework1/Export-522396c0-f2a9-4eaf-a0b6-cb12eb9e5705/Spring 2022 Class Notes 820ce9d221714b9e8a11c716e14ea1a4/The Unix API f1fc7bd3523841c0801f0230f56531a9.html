@@ -1,0 +1,1238 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>The Unix API</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+}
+
+.simple-table-header {
+	background: rgb(247, 246, 243);
+	color: black;
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="f1fc7bd3-5238-41c0-801f-0230f56531a9" class="page sans"><header><h1 class="page-title">The Unix API</h1><table class="properties"><tbody><tr class="property-row property-row-created_time"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesCreatedAt"><path d="M6.98643729,14.0000972 C5.19579566,14.0000972 3.40419152,13.3106896 2.04245843,11.9323606 C-0.681017475,9.21200555 -0.680780251,4.76029539 2.04293482,2.04012507 C4.76664406,-0.68004331 9.22427509,-0.68004331 11.9480135,2.04013479 C13.272481,3.36277455 14,5.1330091 14,6.99552762 C14,8.87640182 13.2721894,10.6285043 11.9480135,11.9509302 C10.5679344,13.3105924 8.77756503,14.0000972 6.98643729,14.0000972 Z M10.2705296,7.00913883 L10.2705296,8.46099754 L10.2705296,8.65543362 L10.076181,8.65543362 L8.6543739,8.65543362 L5.72059514,8.65543362 L5.52619796,8.65543362 L5.52619796,8.46099754 L5.52619796,5.52541044 L5.52619796,3.37946773 L5.52619796,3.18502193 L5.72059514,3.18502193 L7.17253164,3.18502193 L7.36692883,3.18502193 L7.36692883,3.37946773 L7.36692883,6.81467358 L10.076181,6.81467358 L10.2705296,6.81467358 L10.2705296,7.00913883 Z M12.1601539,6.99552762 C12.1601539,5.61697497 11.6190112,4.32597154 10.6393933,3.34769528 C8.63253764,1.34336744 5.35197452,1.34061603 3.34153136,3.33944106 C3.33868273,3.34219247 3.33607716,3.34494388 3.33322852,3.34769528 C1.32397148,5.35459953 1.32372842,8.63641682 3.33322852,10.6433794 C5.34295224,12.6504489 8.62968901,12.6504489 10.6393933,10.6433794 C11.6190112,9.66506426 12.1601539,8.37408027 12.1601539,6.99552762 Z"></path></svg></span>Created</th><td><time>@February 1, 2022 12:32 PM</time></td></tr><tr class="property-row property-row-select"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesSelect"><path d="M7,13 C10.31348,13 13,10.31371 13,7 C13,3.68629 10.31348,1 7,1 C3.68652,1 1,3.68629 1,7 C1,10.31371 3.68652,13 7,13 Z M3.75098,5.32278 C3.64893,5.19142 3.74268,5 3.90869,5 L10.09131,5 C10.25732,5 10.35107,5.19142 10.24902,5.32278 L7.15771,9.29703 C7.07764,9.39998 6.92236,9.39998 6.84229,9.29703 L3.75098,5.32278 Z"></path></svg></span>Class</th><td><span class="selected-value select-value-color-green">CS4144</span></td></tr><tr class="property-row property-row-select"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesSelect"><path d="M7,13 C10.31348,13 13,10.31371 13,7 C13,3.68629 10.31348,1 7,1 C3.68652,1 1,3.68629 1,7 C1,10.31371 3.68652,13 7,13 Z M3.75098,5.32278 C3.64893,5.19142 3.74268,5 3.90869,5 L10.09131,5 C10.25732,5 10.35107,5.19142 10.24902,5.32278 L7.15771,9.29703 C7.07764,9.39998 6.92236,9.39998 6.84229,9.29703 L3.75098,5.32278 Z"></path></svg></span>Type</th><td><span class="selected-value select-value-color-red">Lecture</span></td></tr><tr class="property-row property-row-file"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesFile"><path d="M5.94578,14 C4.62416,14 3.38248,13.4963 2.44892,12.585 C1.514641,11.6736 1,10.4639 1,9.17405 C1.00086108,7.88562 1.514641,6.67434 2.44892,5.76378 L7.45612,0.985988 C8.80142,-0.327216 11.1777,-0.332396 12.5354,0.992848 C13.9369,2.36163 13.9369,4.58722 12.5354,5.95418 L8.03046,10.2414 C7.16278,11.0877 5.73682,11.0894 4.86024,10.2345 C3.98394,9.37789 3.98394,7.98769 4.86024,7.1327 L6.60422,5.4317 L7.87576,6.67196 L6.13177,8.37297 C6.01668,8.48539 6.00003,8.61545 6.00003,8.68335 C6.00003,8.75083 6.01668,8.88103 6.13177,8.99429 C6.36197,9.21689 6.53749,9.21689 6.76768,8.99429 L11.2707,4.70622 C11.9645,4.03016 11.9645,2.91757 11.2638,2.23311 C10.5843,1.57007 9.40045,1.57007 8.72077,2.23311 L3.71342,7.0109 C3.12602,7.58406 2.79837,8.35435 2.79837,9.17405 C2.79837,9.99459 3.12602,10.7654 3.72045,11.3446 C4.90947,12.5062 6.98195,12.5062 8.17096,11.3446 L10.41911,9.15165 L11.6906,10.3919 L9.4425,12.585 C8.50808,13.4963 7.2664,14 5.94578,14 Z"></path></svg></span>Materials</th><td><span style="margin-right:6px"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/20220203-slides.pdf">20220203-slides.pdf</a></span><span style="margin-right:6px"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/20220201-slides.pdf">20220201-slides.pdf</a></span></td></tr><tr class="property-row property-row-checkbox"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesCheckbox"><path d="M0,3 C0,1.34314 1.34326,0 3,0 L11,0 C12.6567,0 14,1.34314 14,3 L14,11 C14,12.6569 12.6567,14 11,14 L3,14 C1.34326,14 0,12.6569 0,11 L0,3 Z M3,1.5 C2.17139,1.5 1.5,2.17157 1.5,3 L1.5,11 C1.5,11.8284 2.17139,12.5 3,12.5 L11,12.5 C11.8286,12.5 12.5,11.8284 12.5,11 L12.5,3 C12.5,2.17157 11.8286,1.5 11,1.5 L3,1.5 Z M2.83252,6.8161 L3.39893,6.27399 L3.57617,6.10425 L3.92334,5.77216 L4.26904,6.10559 L4.44531,6.27582 L5.58398,7.37402 L9.28271,3.81073 L9.45996,3.64008 L9.80664,3.3056 L10.1538,3.63989 L10.3311,3.81067 L10.8936,4.35303 L11.0708,4.52399 L11.4434,4.88379 L11.0708,5.24353 L10.8936,5.41437 L6.1084,10.0291 L5.93115,10.2 L5.58398,10.5344 L5.23682,10.2 L5.05957,10.0292 L2.83057,7.87946 L2.65283,7.70801 L2.27832,7.34674 L2.6543,6.98694 L2.83252,6.8161 Z"></path></svg></span>Reviewed</th><td><div class="checkbox checkbox-off"></div></td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesDate"><path d="M10.8889,5.5 L3.11111,5.5 L3.11111,7.05556 L10.8889,7.05556 L10.8889,5.5 Z M12.4444,1.05556 L11.6667,1.05556 L11.6667,0 L10.1111,0 L10.1111,1.05556 L3.88889,1.05556 L3.88889,0 L2.33333,0 L2.33333,1.05556 L1.55556,1.05556 C0.692222,1.05556 0.00777777,1.75556 0.00777777,2.61111 L0,12.5 C0,13.3556 0.692222,14 1.55556,14 L12.4444,14 C13.3,14 14,13.3556 14,12.5 L14,2.61111 C14,1.75556 13.3,1.05556 12.4444,1.05556 Z M12.4444,12.5 L1.55556,12.5 L1.55556,3.94444 L12.4444,3.94444 L12.4444,12.5 Z M8.55556,8.61111 L3.11111,8.61111 L3.11111,10.1667 L8.55556,10.1667 L8.55556,8.61111 Z"></path></svg></span>Due</th><td></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesText"><path d="M7,4.56818 C7,4.29204 6.77614,4.06818 6.5,4.06818 L0.5,4.06818 C0.223858,4.06818 0,4.29204 0,4.56818 L0,5.61364 C0,5.88978 0.223858,6.11364 0.5,6.11364 L6.5,6.11364 C6.77614,6.11364 7,5.88978 7,5.61364 L7,4.56818 Z M0.5,1 C0.223858,1 0,1.223858 0,1.5 L0,2.54545 C0,2.8216 0.223858,3.04545 0.5,3.04545 L12.5,3.04545 C12.7761,3.04545 13,2.8216 13,2.54545 L13,1.5 C13,1.223858 12.7761,1 12.5,1 L0.5,1 Z M0,8.68182 C0,8.95796 0.223858,9.18182 0.5,9.18182 L11.5,9.18182 C11.7761,9.18182 12,8.95796 12,8.68182 L12,7.63636 C12,7.36022 11.7761,7.13636 11.5,7.13636 L0.5,7.13636 C0.223858,7.13636 0,7.36022 0,7.63636 L0,8.68182 Z M0,11.75 C0,12.0261 0.223858,12.25 0.5,12.25 L9.5,12.25 C9.77614,12.25 10,12.0261 10,11.75 L10,10.70455 C10,10.4284 9.77614,10.20455 9.5,10.20455 L0.5,10.20455 C0.223858,10.20455 0,10.4284 0,10.70455 L0,11.75 Z"></path></svg></span>Student</th><td></td></tr></tbody></table></header><div class="page-body"><ul id="5bfe7f54-8e09-461f-8e84-dcd1dd755df5" class="toggle"><li><details open=""><summary>Quiz 3</summary><pre id="f352fc0a-c709-4656-80cd-93db534080a3" class="code code-wrap"><code>pid_t pid1, pid2;
+int pipe_fds1[2];
+int pipe_fds2[2];
+if (pipe(pipe_fds1) &lt; 0) abort();
+if (pipe(pipe_fds2) &lt; 0) abort();
+pid1 = fork();
+if (pid1 == (pid_t) -1) abort();
+if (pid1 == 0) {
+    /* first child */
+    dup2(pipe_fds1[1], STDOUT_FILENO); // Child 1 changes output to p_fds1[1] WRITE END
+    close(pipe_fds1[0]); close(pipe_fds1[1]); // close the pipes
+    close(pipe_fds2[0]); close(pipe_fds2[1]); // again..
+    char args[] = {&quot;programA&quot;, NULL}; // args = programA
+    execv(&quot;programA&quot;, args); // execute programA
+    abort(); // if you fail, abort
+}
+pid2 = fork(); // child 2, will have STDOUT still going to pipe_fds[1]
+if (pid2 == (pid_t) -1) abort();
+if (pid2 == 0) {
+    /* second child */
+    ___________________________ /* BLANK ONE */ 
+		// We want the input to child 2 (programB) to be the output from child1 (programA)
+																							
+    close(pipe_fds1[0]); close(pipe_fds1[1]); // close p_fds1
+    close(pipe_fds2[0]); close(pipe_fds2[1]); // close p_fds2
+    char args[] = {&quot;programB&quot;, NULL}; // same, but programB
+    execv(&quot;programB&quot;, args);
+    abort();
+}
+/* parent (after starting both children) */
+close(_________ /* BLANK TWO*/); close(________ /* BLANK THREE */); // close the pipes
+char c;
+while (read(___________ /* BLANK FOUR */, &amp;c, 1) &gt; 0) { 
+// read the outputs from from child2, which were updated by child2 pipe_fds1[0]
+    c = toupper(c);
+    write(____________ /* BLANK FIVE */, &amp;c, 1);
+}</code></pre><figure id="47c5f828-8bca-481d-af85-b821d169df5c" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_5.05.41_PM.png"><img style="width:1401px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_5.05.41_PM.png"/></a></figure><p id="49c8a8f4-8221-4120-8bb6-614e62de8b4e" class=""><strong>Answer: H</strong></p><figure id="3871d384-04f5-49f2-a92b-5e00463e2b33" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_5.14.05_PM.png"><img style="width:953px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_5.14.05_PM.png"/></a></figure><p id="0d8c1f98-2e4e-41b2-b4c9-138d355a41f6" class=""><strong>Answer:  A , </strong> programB will still write to pipe_fds1[1]</p><figure id="af5860db-d2b5-4a8b-94ef-a0161259f3be" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_5.49.22_PM.png"><img style="width:1408px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_5.49.22_PM.png"/></a></figure><p id="ca6bca4e-5ac8-4c8a-9de7-1f375123c9b3" class="">We want to minimize context switches!</p><p id="652942cc-d939-4abb-8963-bfca25db9aff" class=""><strong>Answer:  </strong><div class="indented"><ul id="d5f59806-e434-41be-803e-19a9b9e27fd0" class="bulleted-list"><li style="list-style-type:disc"><strong>A, this decreases context switches</strong></li></ul><ul id="93bec5f4-9db2-45c2-b893-8bb636b88e85" class="bulleted-list"><li style="list-style-type:disc">I think B and C will increase the context switches and therefore is wrong<ul id="6ad8b315-45b6-400f-b8b0-d5684d9e1ec9" class="bulleted-list"><li style="list-style-type:circle">B is increasing Fairness, which is in conflict with throughput</li></ul><ul id="c7604e68-5ff4-4059-860d-221c0768991c" class="bulleted-list"><li style="list-style-type:circle">C is increasing turnaround, which will lead to more context switches.</li></ul></li></ul></div></p><figure id="16e06f42-64f2-41d5-aacc-190bb87c7da3" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_5.59.56_PM.png"><img style="width:1443px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_5.59.56_PM.png"/></a></figure><ul id="e5447186-f348-49fc-a33d-dc52b6325d56" class="bulleted-list"><li style="list-style-type:disc"><strong>Question 4</strong><p id="312effed-9f9b-4c04-ae6d-9dd736e725dc" class="">In lecture, in the context of CPU scheduling, we defined turnaround time as the time from when a thread is able to run (for example, because some input it was waiting for happened) on the CPU until when it ceases to be able to run (for example, because it is waiting for more input). What is the <em>total</em> turnaround time experienced by thread A in the schedule shown above?</p><ul id="a7b35a4c-40e0-4c79-804b-c41f48e55a6c" class="bulleted-list"><li style="list-style-type:circle">0-1, Running. 1-7 (runnable), 7-9 (running), 9- (not runnable) = 9 time units</li></ul></li></ul><ul id="73b91e13-55fb-47fb-8619-2a49cc071a0a" class="bulleted-list"><li style="list-style-type:disc"><strong>Question 5</strong><p id="c8de8dbf-2b9d-4d66-a33f-754bbc259f4d" class="">What is the <em>total</em> turnaround time experienced by thread B in the schedule shown above?</p><ul id="15285796-78f5-460b-8154-508c7a2ea332" class="bulleted-list"><li style="list-style-type:circle">0-4 (Runnable/Running), 4-10 (not runnable), 10-12 (running), 13- (not runnable) = 4 + 2 = 6 time units</li></ul></li></ul><ul id="d31bf72e-83dc-4788-ad13-260c71c3f3c0" class="bulleted-list"><li style="list-style-type:disc"><strong>Question 6</strong><figure id="8f355bb6-3863-4978-81ed-ccb5b7102a49" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_6.09.07_PM.png"><img style="width:1346px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-14_at_6.09.07_PM.png"/></a></figure><ul id="fc70737f-4d00-4947-92d2-0a1a3ebd2b93" class="bulleted-list"><li style="list-style-type:circle">A: B = -1 t_units, A = no change → -1 change</li></ul><ul id="e3b8b635-c201-40bd-bb94-f949992619b8" class="bulleted-list"><li style="list-style-type:circle">B: C = -1 t_units, B = +1 t_units → no change</li></ul><ul id="e518f22a-a788-498c-85ee-e3d0e21c4342" class="bulleted-list"><li style="list-style-type:circle">C: A = -3 t_units, C = +2 t_units → -1 change</li></ul></li></ul></details></li></ul><h2 id="40acdc5e-33ae-442d-b50a-dbbb46a29118" class="">POSIX</h2><p id="8b5a51a7-4374-4c8f-b505-6ed433dbbd11" class="">POSIX defines the:</p><ul id="e4eb6617-862c-4508-9358-47a923b8cc2e" class="bulleted-list"><li style="list-style-type:disc">Library</li></ul><ul id="4e3c9e54-3812-49e7-89ae-fa8d8c39e35c" class="bulleted-list"><li style="list-style-type:disc">Shell / CLI</li></ul><ul id="66fef86b-5a94-49bf-b309-939c5479121c" class="bulleted-list"><li style="list-style-type:disc">Not about:<ul id="9df737a1-185c-441e-8317-036ec1dc1fd4" class="bulleted-list"><li style="list-style-type:circle">System Calls</li></ul><ul id="f345ac61-fbc6-4cc6-8c05-8b67b90a88a2" class="bulleted-list"><li style="list-style-type:circle">Binaries</li></ul></li></ul><ul id="09beced7-5ca8-46f1-9bc7-428ab453f302" class="bulleted-list"><li style="list-style-type:disc">Write Once, Recompile Everywhere</li></ul><h3 id="8a3d2dee-37a9-47b9-9129-164394f02e5b" class="">Process Management</h3><ul id="8b414ff0-d20d-40b7-81a5-426de973188a" class="bulleted-list"><li style="list-style-type:disc"><code>getpid</code> - every process running has a number that uniquely identifies it during its life. this gets the information on the current process<ul id="f560d844-fe78-4629-a7ad-76ad4b145f85" class="bulleted-list"><li style="list-style-type:circle"><code>pid</code> is stored in the <em>process control block</em> for the respective program</li></ul></li></ul><ul id="8e34eee6-64c9-4db7-924e-3492391ee516" class="bulleted-list"><li style="list-style-type:disc"><code>fork</code> - create a process<ul id="974312bb-58c7-4b77-b19e-8dee29fdc3a7" class="bulleted-list"><li style="list-style-type:circle"><code>pid_t fork()</code> - copy the current process</li></ul><ul id="81703033-a76c-4972-b9fa-e9c3adab1899" class="bulleted-list"><li style="list-style-type:circle">returns: in the <code>%eax</code><ul id="c09437ab-21fa-4807-a108-c569b9875066" class="bulleted-list"><li style="list-style-type:square">parent: pid of newly created child process</li></ul><ul id="4ea024d2-aada-4927-b3ed-9f00a1cb7236" class="bulleted-list"><li style="list-style-type:square">child: 0</li></ul></li></ul><ul id="27eb2cc1-ad27-4ccb-9ee5-5e6ff1489e11" class="bulleted-list"><li style="list-style-type:circle">Duplicates everything except the <code>pid</code><figure id="1f547669-a789-475f-b685-48260a6753a2" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-01_at_1.12.17_PM.png"><img style="width:1958px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-01_at_1.12.17_PM.png"/></a></figure><ul id="2033b8aa-2560-434f-b86e-72c1ecd74adc" class="bulleted-list"><li style="list-style-type:square">memory<ul id="08bf846a-e023-45a7-b718-fadb81321f67" class="bulleted-list"><li style="list-style-type:disc">Deep Copy of Kernel stack too</li></ul></li></ul><ul id="bd0c0fcd-1859-419e-96c9-9b822c5e93b0" class="bulleted-list"><li style="list-style-type:square">file descriptors</li></ul><ul id="e90eb48e-4f9d-4b64-aa4c-59a6c760e312" class="bulleted-list"><li style="list-style-type:square">registers</li></ul><ul id="13bf2980-e212-4033-af58-d2275375104c" class="bulleted-list"><li style="list-style-type:square">PC</li></ul></li></ul></li></ul><ul id="83f6cdb4-dd6a-4edd-88cf-e2cf8faf08e7" class="bulleted-list"><li style="list-style-type:disc"><code>exec</code> - replace current program with a new program<ul id="bba32e1b-2ad5-4f6a-9043-a72215b2b266" class="bulleted-list"><li style="list-style-type:circle"><code>exec [-cl] [-a name] [command [arguments]] [redirection ...]</code></li></ul><ul id="4b044546-26f0-41e0-bdbc-faf7cb6c60fe" class="toggle"><li><details open=""><summary><strong>Exec Man Page </strong></summary><pre id="c223071c-7697-4344-b0d5-6a706f9729f6" class="code code-wrap"><code>EXEC(3)                     Library Functions Manual                     EXEC(3)
+NAMEexecl,execle,execlp,execv,execvp,execvP - execute a file
+
+LIBRARY
+
+     Standard C Library (libc, -lc)
+
+SYNOPSIS#include&lt;unistd.h&gt;externchar**environ;
+
+intexecl(constchar*path,constchar*arg0,...,/*,(char*)0,*/);
+
+intexecle(constchar*path,constchar*arg0,...,/*(char*)0char*constenvp[]*/);
+
+intexeclp(constchar*file,constchar*arg0,...,/*,(char*)0,*/);
+
+intexecv(constchar*path,char*constargv[]);
+
+intexecvp(constchar*file,char*constargv[]);
+
+intexecvP(constchar*file,constchar*search_path,char*constargv[]);
+
+DESCRIPTION
+
+     Theexec family of functions replaces the current process image with a new
+     process image.  The functions described in this manual page are front-ends
+     for the functionexecve(2).  (See the manual page forexecve(2) for
+     detailed information about the replacement of the current process.)
+
+     The initial argument for these functions is the pathname of a file which is
+     to be executed.
+
+     Theconstchar*arg0 and subsequent ellipses in theexecl(),execlp(), and
+execle() functions can be thought of asarg0,arg1, ...,argn.  Together
+     they describe a list of one or more pointers to null-terminated strings
+     that represent the argument list available to the executed program.  The
+     first argument, by convention, should point to the file name associated
+     with the file being executed.  The list of argumentsmust be terminated by
+     a NULL pointer.
+
+     Theexecv(),execvp(), andexecvP() functions provide an array of pointers
+     to null-terminated strings that represent the argument list available to
+     the new program.  The first argument, by convention, should point to the
+     file name associated with the file being executed.  The array of pointers
+must be terminated by a NULL pointer.
+
+     Theexecle() function also specifies the environment of the executed
+     process by following the NULL pointer that terminates the list of arguments
+     in the argument list or the pointer to the argv array with an additional
+     argument.  This additional argument is an array of pointers to null-
+     terminated strings andmust be terminated by a NULL pointer.  The other
+     functions take the environment for the new process image from the external
+     variableenviron in the current process.
+
+     Some of these functions have special semantics.
+
+     The functionsexeclp(),execvp(), andexecvP() will duplicate the actions
+     of the shell in searching for an executable file if the specified file name
+     does not contain a slash &quot;/&quot; character.  Forexeclp() andexecvp(), search
+     path is the path specified in the environment by &quot;PATH&quot; variable.  If this
+     variable is not specified, the default path is set according to the
+     _PATH_DEFPATH definition in &lt;paths.h&gt;, which is set to &quot;/usr/bin:/bin&quot;.
+     ForexecvP(), the search path is specified as an argument to the function.
+     In addition, certain errors are treated specially.
+
+     If an error is ambiguous (for simplicity, we shall consider all errors
+     except ENOEXEC as being ambiguous here, although only the critical error
+     EACCES is really ambiguous), then these functions will act as if they stat
+     the file to determine whether the file exists and has suitable execute
+     permissions.  If it does, they will return immediately with the global
+     variableerrno restored to the value set byexecve().  Otherwise, the
+     search will be continued.  If the search completes without performing a
+     successfulexecve() or terminating due to an error, these functions will
+     return with the global variableerrno set to EACCES or ENOENT according to
+     whether at least one file with suitable execute permissions was found.
+
+     If the header of a file is not recognized (the attemptedexecve() returned
+     ENOEXEC), these functions will execute the shell with the path of the file
+     as its first argument.  (If this attempt fails, no further searching is
+     done.)
+
+RETURN VALUES
+
+     If any of theexec() functions returns, an error will have occurred.  The
+     return value is -1, and the global variable errno will be set to indicate
+     the error.
+
+FILES/bin/sh  The shell.
+
+COMPATIBILITY
+
+     Historically, the default path for theexeclp() andexecvp() functions was
+     &quot;:/bin:/usr/bin&quot;.  This was changed to place the current directory last to
+     enhance system security.
+
+     The behavior ofexeclp() andexecvp() when errors occur while attempting to
+     execute the file is not quite historic practice, and has not traditionally
+     been documented and is not specified by the POSIX standard.
+
+     Traditionally, the functionsexeclp() andexecvp() ignored all errors
+     except for the ones described above and ETXTBSY, upon which they retried
+     after sleeping for several seconds, and ENOMEM and E2BIG, upon which they
+     returned.  They now return for ETXTBSY, and determine existence and
+     executability more carefully.  In particular, EACCES for inaccessible
+     directories in the path prefix is no longer confused with EACCES for files
+     with unsuitable execute permissions.  In 4.4BSD, they returned upon all
+     errors except EACCES, ENOENT, ENOEXEC and ETXTBSY.  This was inferior to
+     the traditional error handling, since it breaks the ignoring of errors for
+     path prefixes and only improves the handling of the unusual ambiguous error
+     EFAULT and the unusual error EIO.  The behaviour was changed to match the
+     behaviour ofsh(1).
+
+ERRORS
+
+     Theexecl(),execle(),execlp(),execvp(), andexecvP() functions may fail
+     and seterrno for any of the errors specified for the library functions
+execve(2) andmalloc(3).
+
+     Theexecv() function may fail and seterrno for any of the errors specified
+     for the library functionexecve(2).
+
+SEE ALSOsh(1),execve(2),fork(2),ptrace(2),environ(7)STANDARDS
+
+     Theexecl(),execv(),execle(),execlp(), andexecvp() functions conform to
+     IEEE Std 1003.1-1988 (&quot;POSIX.1&quot;).  TheexecvP() function first appeared in
+     FreeBSD 5.2.
+
+macOS 12.1                      January 24, 1994                      macOS 12.1
+</code></pre></details></li></ul><ul id="a9e2d156-9cb3-4088-a8e5-6bd2c7e342ed" class="bulleted-list"><li style="list-style-type:circle">Multiple variants to decide what program to run</li></ul><ul id="d5321543-0c87-4b8f-96da-91e433293e6f" class="bulleted-list"><li style="list-style-type:circle">The replaced process has the same <code>pid</code> as the new process<figure id="64d02b2c-01f8-4c24-bb8f-c34b43995905"><a href="https://www.baeldung.com/linux/exec-command-in-shell-script" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title"></div></div><div class="bookmark-href">https://www.baeldung.com/linux/exec-command-in-shell-script</div></div></a><figcaption>This link goes over the many uses of <code>exec</code> in the shell</figcaption></figure><pre id="02da3b15-e167-451d-81d5-84adb0f2ea92" class="code"><code># Example of using exec in the shell
+$ pstree -p
+init(1)─┬─init(52)───bash(53)
+        ├─init(78)───bash(79)───pstree(108)
+        └─{init}(7)
+$ echo $$
+79
+$ exec sleep 300
+...
+$ ps -aef | grep $USER
+user1       53    52  0 23:37 tty2     00:00:00 -bash
+user1       79    78  0 23:39 tty1     00:00:00 sleep 300
+user1      111    53  0 23:40 tty2     00:00:00 ps -aef
+user1      112    53  0 23:40 tty2     00:00:00 grep --color=aut</code></pre></li></ul><ul id="21ac58f6-6a7d-4408-9092-a5fa18ee506d" class="bulleted-list"><li style="list-style-type:circle"><code>exec</code> and PCBs<figure id="50a362ff-81e4-43c0-b707-1776fe928fe9" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-01_at_1.35.01_PM.png"><img style="width:1924px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-01_at_1.35.01_PM.png"/></a></figure></li></ul></li></ul><ul id="63cc499e-4169-410b-89c6-4ec16cb6f3ba" class="bulleted-list"><li style="list-style-type:disc"><code>posix_spawn</code> - creates a program without need to replace the current one<ul id="8ff74cb3-a48b-4c27-bd7c-fb3f113d4e01" class="bulleted-list"><li style="list-style-type:circle">Not used by most POSIX compliant OS’s, but probably should be used?<ul id="4882e3fa-4f85-4ace-adbc-240b0c9237c9" class="toggle"><li><details open=""><summary>Opinion from HotOS 2019 on <code>fork()</code> and <code>exec()</code></summary><figure id="58a0cf38-62e4-456b-a465-8df2db437c0e" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-01_at_1.39.37_PM.png"><img style="width:1620px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-01_at_1.39.37_PM.png"/></a></figure></details></li></ul></li></ul><ul id="931a5852-6a55-48e1-bc71-2f97ef2d9a33" class="bulleted-list"><li style="list-style-type:circle">Needs an API to set new program’s state (verse copying and then destroying current one)</li></ul></li></ul><ul id="ff00c56c-8c43-47ec-938b-a9f50c47b41a" class="bulleted-list"><li style="list-style-type:disc"><code>waitpid</code> - wait for the child process to finish. <code>wait</code><ul id="9734f547-1d79-413d-9591-e3338e3e676b" class="bulleted-list"><li style="list-style-type:circle"><code>pid_t waitpid(pid_t pid, int *status, int options)</code></li></ul><ul id="7e8556bf-63c8-46a0-b5ff-b7239438f8df" class="bulleted-list"><li style="list-style-type:circle">waits for a child process to finish<ul id="58c9c71a-e165-4138-a752-008a1ebea9e6" class="bulleted-list"><li style="list-style-type:square">determined by the <code>pid_t pid</code> argument</li></ul><ul id="97e5a54c-464f-4c55-bffa-0ae168b6b4dd" class="bulleted-list"><li style="list-style-type:square"><code>pid = -1</code> → wait for any child process instead</li></ul></li></ul><ul id="3bad5db7-95f2-4a6e-8c90-2ba6813414cb" class="toggle"><li><details open=""><summary><code>waitpid</code> man page</summary><p id="42746cb2-36fb-4c99-a40a-85fa29821e42" class="">
+</p><pre id="4159a450-0517-4736-a5e0-3b32c903eb55" class="code"><code>NAME
+
+     wait, wait3, wait4, waitpid - wait for process termination
+
+SYNOPSIS
+
+     #include &lt;sys/wait.h&gt;
+
+     pid_t
+     wait(int *stat_loc);
+
+     pid_t
+     wait3(int *stat_loc, int options, struct rusage *rusage);
+
+     pid_t
+     wait4(pid_t pid, int *stat_loc, int options, struct rusage *rusage);
+
+     pid_t
+     waitpid(pid_t pid, int *stat_loc, int options);
+
+DESCRIPTION
+
+     The wait() function suspends execution of its calling process until
+     stat_loc information is available for a terminated child process, or a
+     signal is received.  On return from a successful wait() call, the stat_loc
+     area contains termination information about the process that exited as
+     defined below.
+
+     The wait4() call provides a more general interface for programs that need
+     to wait for certain child processes, that need resource utilization
+     statistics accumulated by child processes, or that require options.  The
+     other wait functions are implemented using wait4().
+
+     The pid parameter specifies the set of child processes for which to wait.
+     If pid is -1, the call waits for any child process.  If pid is 0, the call
+     waits for any child process in the process group of the caller.  If pid is
+     greater than zero, the call waits for the process with process id pid.  If
+     pid is less than -1, the call waits for any process whose process group id
+     equals the absolute value of pid.
+
+     The stat_loc parameter is defined below.  The options parameter contains
+     the bitwise OR of any of the following options.  The WNOHANG option is used
+     to indicate that the call should not block if there are no processes that
+     wish to report status.  If the WUNTRACED option is set, children of the
+     current process that are stopped due to a SIGTTIN, SIGTTOU, SIGTSTP, or
+     SIGSTOP signal also have their status reported.
+
+     If rusage is non-zero, a summary of the resources used by the terminated
+     process and all its children is returned (this information is currently not
+     available for stopped processes).
+
+     When the WNOHANG option is specified and no processes wish to report
+     status, wait4() returns a process id of 0.
+
+     The waitpid() call is identical to wait4() with an rusage value of zero.
+     The older wait3() call is the same as wait4() with a pid value of -1.
+
+     The following macros may be used to test the manner of exit of the process.
+     One of the first three macros will evaluate to a non-zero (true) value:
+
+     WIFEXITED(status)
+             True if the process terminated normally by a call to _exit(2) or
+             exit(3).
+
+     WIFSIGNALED(status)
+             True if the process terminated due to receipt of a signal.
+
+     WIFSTOPPED(status)
+             True if the process has not terminated, but has stopped and can be
+             restarted.  This macro can be true only if the wait call specified
+             the WUNTRACED option or if the child process is being traced (see
+             ptrace(2)).
+
+     Depending on the values of those macros, the following macros produce the
+     remaining status information about the child process:
+
+     WEXITSTATUS(status)
+             If WIFEXITED(status) is true, evaluates to the low-order 8 bits of
+             the argument passed to _exit(2) or exit(3) by the child.
+
+     WTERMSIG(status)
+             If WIFSIGNALED(status) is true, evaluates to the number of the
+             signal that caused the termination of the process.
+
+     WCOREDUMP(status)
+             If WIFSIGNALED(status) is true, evaluates as true if the
+             termination of the process was accompanied by the creation of a
+             core file containing an image of the process when the signal was
+             received.
+
+     WSTOPSIG(status)
+             If WIFSTOPPED(status) is true, evaluates to the number of the
+             signal that caused the process to stop.
+
+NOTES
+
+     See sigaction(2) for a list of termination signals.  A status of 0
+     indicates normal termination.
+
+     If a parent process terminates without waiting for all of its child
+     processes to terminate, the remaining child processes are assigned the
+     parent process 1 ID (the init process ID).
+
+     If a signal is caught while any of the wait() calls is pending, the call
+     may be interrupted or restarted when the signal-catching routine returns,
+     depending on the options in effect for the signal; see intro(2), System
+     call restart.
+
+RETURN VALUES
+
+     If wait() returns due to a stopped or terminated child process, the process
+     ID of the child is returned to the calling process.  Otherwise, a value of
+     -1 is returned and errno is set to indicate the error.
+
+     If wait3(), wait4(), or waitpid() returns due to a stopped or terminated
+     child process, the process ID of the child is returned to the calling
+     process.  If there are no children not previously awaited, -1 is returned
+     with errno set to [ECHILD].  Otherwise, if WNOHANG is specified and there
+     are no stopped or exited children, 0 is returned.  If an error is detected
+     or a caught signal aborts the call, a value of -1 is returned and errno is
+     set to indicate the error.
+
+ERRORS
+
+     The wait() system call will fail and return immediately if:
+
+     [ECHILD]           The calling process has no existing unwaited-for child
+                        processes.
+
+     [EFAULT]           The status or rusage argument points to an illegal
+                        address (may not be detected before the exit of a child
+                        process).
+
+     [EINVAL]           Invalid or undefined flags are passed in the options
+                        argument.
+
+     The wait3() and waitpid() calls will fail and return immediately if:
+
+     [ECHILD]           The process specified by pid does not exist or is not a
+                        child of the calling process, or the process group
+                        specified by pid does not exist or does not have any
+                        member process that is a child of the calling process.
+
+     The waitpid() call will fail and return immediately if:
+
+     [EINVAL]           The options argument is not valid.
+
+     Any of these calls will fail and return immediately if:
+
+     [EINTR]            The call is interrupted by a caught signal or the signal
+                        does not have the SA_RESTART flag set.
+
+STANDARDS
+
+     The wait() and waitpid() functions are defined by POSIX; wait3() and
+     wait4() are not specified by POSIX.  The WCOREDUMP() macro and the ability
+     to restart a pending wait() call are extensions to the POSIX interface.
+
+LEGACY SYNOPSIS
+
+     #include &lt;sys/types.h&gt;
+     #include &lt;sys/wait.h&gt;
+
+     The include file &lt;sys/types.h&gt; is necessary.
+
+SEE ALSO
+
+     sigaction(2), exit(3), compat(5)
+
+HISTORY
+
+     A wait() function call appeared in Version 6 AT&amp;T UNIX.
+
+BSD 4                            April 19, 1994                            BSD 4</code></pre></details></li></ul><pre id="af529a7f-42ff-4438-a4d0-40ab883438b1" class="code"><code>// waitpid example
+#include &lt;sys/wait.h&gt;
+ ...
+	child_pid = fork(); 
+	if (child_pid &gt; 0) {
+		/* Parent process */
+		int status;
+		waitpid(child_pid, &amp;status, 0);
+	} 
+else if (child_pid == 0) {
+	/* Child process */
+	...
+}</code></pre><ul id="7aa2e797-ec42-4492-9065-457e51c4c7cf" class="bulleted-list"><li style="list-style-type:circle">Exercise (1)<pre id="a9cc0080-b864-4c29-af86-c2de032157ba" class="code"><code>int main() { *
+pid_t pids[2]; 
+const char args[] = {&quot;echo&quot;, &quot;ARG&quot;, NULL}; 
+const char *extra[] = {&quot;L1&quot;, &quot;L2&quot;};
+for (int i = 0; i &lt; 2; ++i) {
+	pids[i] = fork();      // assign pids[0] to either child pid or 0
+	if (pids[i] == 0) {    // after the fork, child enters if statement
+	  args[1] = extra[i];
+    execv(&quot;/bin/echo&quot;, args);
+  }
+}
+	for (int i = 0; i &lt; 2; ++i) {
+		waitpid(pids[i], NULL, 0);
+	}
+}</code></pre><ul id="6bb1f3e6-a39c-48b7-84e4-cd769946a03f" class="bulleted-list"><li style="list-style-type:square">Answer: E - A and C</li></ul><ul id="3a878159-bc90-401a-adb4-e8cc838a0010" class="bulleted-list"><li style="list-style-type:square">When <code>pids[i] = fork()</code>, the parent will print <code>L1</code> , the child will print <code>L2</code>. The ordering of this is unknown, therefore both orderings are possible.</li></ul></li></ul></li></ul><ul id="d1d07442-1b64-49c9-b229-d05a9c8b2923" class="bulleted-list"><li style="list-style-type:disc"><code>exit</code> , <code>kill</code> - destroy the current process</li></ul><h2 id="a749251b-a0fd-4cde-b69a-826069f69c7f" class="">Shell</h2><p id="41a5cb31-9d84-4010-8f3a-253d7b489b6a" class="">Allows users to run applications by wrapping around process management functions</p><h3 id="5753427e-40b6-4141-8415-769ba3a60bd1" class="">POSIX command-line features</h3><ul id="f65023dc-f32e-41cf-b4ec-015fc8ae26f9" class="bulleted-list"><li style="list-style-type:disc">Search for programs<ul id="0873460b-e479-4aeb-8070-a6f1b8c854be" class="bulleted-list"><li style="list-style-type:circle"><code>ls -l</code> = <code>/bin/ls -l</code></li></ul></li></ul><ul id="73e21b35-8dc9-46bd-8cd7-29fbd855810d" class="bulleted-list"><li style="list-style-type:disc">Background run<ul id="5b1502a4-32fd-452d-9beb-af9e1531944e" class="bulleted-list"><li style="list-style-type:circle"><code>./someprogram &amp;</code></li></ul></li></ul><ul id="7ed71eba-c1bd-4b7d-82f3-70445880c22d" class="bulleted-list"><li style="list-style-type:disc">redirection<ul id="3e34c9ae-2ea6-4312-8c95-5b043a893616" class="bulleted-list"><li style="list-style-type:circle"><code>./someprogram &gt; output.txt</code><ul id="eba163ed-b993-4211-b33e-d867b4ae8a30" class="bulleted-list"><li style="list-style-type:square">run echo foo, but send output to output.txt, like copy/paste to that file</li></ul></li></ul><ul id="6d16fd50-57c4-494d-aa6e-7623ff0296d9" class="bulleted-list"><li style="list-style-type:circle"><code>./someprogram &lt; input.txt</code><ul id="3d0a846a-a959-4db5-9c59-bbce682804d2" class="bulleted-list"><li style="list-style-type:square">run program, but use input.txt as input, like we copied and pasted into terminal</li></ul></li></ul><ul id="fb9c2963-ed93-4e92-9fb7-96d7f1c105a3" class="bulleted-list"><li style="list-style-type:circle"><code>exec</code> preserves open files<figure id="6c6145c2-a1e1-47f4-b524-42ee97ce85f7" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-03_at_1.24.42_PM.png"><img style="width:1634px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-03_at_1.24.42_PM.png"/></a></figure></li></ul><ul id="7250de17-5daf-4c72-a715-c1692fc91cb3" class="bulleted-list"><li style="list-style-type:circle">fork copies open file list<figure id="7ee93163-34b9-481c-91c9-b49ba5a3812f" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-03_at_1.25.13_PM.png"><img style="width:1642px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-03_at_1.25.13_PM.png"/></a></figure></li></ul><ul id="6e26d86e-8395-4fa0-981d-92f81d246243" class="bulleted-list"><li style="list-style-type:circle"></li></ul></li></ul><ul id="11fa3485-9455-4b61-b9f1-dcceac3e2716" class="bulleted-list"><li style="list-style-type:disc">pipelines<ul id="412df790-90ad-4b09-8b79-e48a5102da6e" class="bulleted-list"><li style="list-style-type:circle"><code>./someprogram | ./somefilter</code></li></ul></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="99cff7e0-b52c-4835-b7e7-2f68b4954a0b"><div style="font-size:1.5em"><span class="icon">✏️</span></div><div style="width:100%"><strong>Shell Assignment
+</strong>Implement a simple shell that supports redirection and pipeline for Unix-like system and prints the exit code of program in the pipline.
+
+simplified parsing: space separated:<figure id="b5ba973b-9645-4a63-9e80-4f5d276668d5" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-03_at_1.02.56_PM.png"><img style="width:1188px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-03_at_1.02.56_PM.png"/></a></figure></div></figure><pre id="aa02c45a-effa-46ee-8203-3152b9e8fba8" class="code code-wrap"><code>main(){ // EXAMPLE
+    int p[2];
+    pipe(p); // Creates a pipe with file descriptors Eg. input = 3 and output = 4 (Since, 0,1 and 2 are not available)
+
+    if (fork() == 0) {
+    // Child process
+        close(0); // Release fd no - 0
+        close(p[0]); // Close pipe fds since useful one is duplicated
+        close(p[1]);
+        dup(p[0]); // Create duplicate of fd - 3 (pipe read end) with fd 0.
+        exec(&quot;cmd2&quot;);
+    } else {
+        //Parent process
+        close(1); // Release fd no - 1
+        close(p[0]); // Close pipe fds since useful one is duplicated
+        close(p[1]);
+        dup(p[1]); // Create duplicate of fd - 4 (pipe write end) with fd 1.
+        exec(&quot;cmd1&quot;);
+    }
+}</code></pre><h2 id="1254454a-a0f5-4d76-8635-f18e71685747" class="">POSIX: Files </h2><p id="0020069e-719c-493f-915e-8a2c5858e946" class="">In POSIX, everything is a file:<div class="indented"><ul id="a2852038-9a91-4eb4-bd87-cb3ccf7d00f6" class="bulleted-list"><li style="list-style-type:disc">devices</li></ul><ul id="91b9d75a-7004-4ce3-a521-a7084aceaba0" class="bulleted-list"><li style="list-style-type:disc">files on disk</li></ul><ul id="1d16d528-8b55-4019-a786-0be640093c99" class="bulleted-list"><li style="list-style-type:disc">networking</li></ul><ul id="0571565c-5748-4d52-a50d-6c29f4a20c69" class="bulleted-list"><li style="list-style-type:disc">local interprocess communications (pipes, sockets)</li></ul></div></p><ul id="80a59c29-7646-4a8d-8aef-34d99066164a" class="bulleted-list"><li style="list-style-type:disc">Basic Ops:<ul id="b428b720-aa44-48ca-83c6-e917ebe42bdd" class="bulleted-list"><li style="list-style-type:circle"><code>open(), read(), write(), close()</code></li></ul></li></ul><ul id="478f7be1-c45b-42ae-adcc-8c0a1cac6cd8" class="bulleted-list"><li style="list-style-type:disc">File Interface:<ul id="1ccfe3da-ba02-49dd-a728-b87b8f7a95cb" class="bulleted-list"><li style="list-style-type:circle">Open file before use</li></ul><ul id="182b0233-b04b-46ae-88f8-d4ba2474c0fd" class="bulleted-list"><li style="list-style-type:circle">Byte-oriented</li></ul><ul id="64385946-8009-4187-8cf4-a6584bc772f7" class="bulleted-list"><li style="list-style-type:circle">Explicit close</li></ul><p id="431ed3b7-ed54-44cf-ade2-ff95d8246dde" class="">Caution:</p><p id="f17497a8-91df-4b11-b93e-36e0e0e894b6" class="">dont mix <code>stdio/iostream</code> and raw <code>read/write</code> </p><ul id="046c0558-082d-44bf-8313-7a54b86d2237" class="bulleted-list"><li style="list-style-type:circle">Because of the buffer, calling <code>read/write</code> will cause the buffer to disappear or out of order output with write</li></ul></li></ul><ul id="65ea7bc0-17be-4f78-8545-8283472397e0" class="bulleted-list"><li style="list-style-type:disc">File System Abstraction<ul id="e0478176-6d31-4542-b03d-30a156fa9591" class="bulleted-list"><li style="list-style-type:circle">Regular files: named collection of bytes</li></ul><ul id="40a92580-e901-48ea-88e1-81af7be7241d" class="bulleted-list"><li style="list-style-type:circle">Directories: Folders containing files and directories</li></ul></li></ul><ul id="2c87ad4f-13dd-4034-87e0-bf152235d43c" class="bulleted-list"><li style="list-style-type:disc"><code>open()</code><pre id="e1f2f597-bcce-4b56-b568-a2acf4859381" class="code"><code>int open(const char *path, int flags);
+int open(const char *path, int flags, int mode); 
+...
+int read_fd = open(&quot;dir/file1&quot;, O_RDONLY); 
+int write_fd = open(&quot;/other/file2&quot;,
+										O_WRONLY | O_CREAT | O_TRUNC, 0666);
+										// write, create, truncate, permission level
+int rdwr_fd = open(&quot;file3&quot;, O_RDWR);
+
+// Path = Filename ~ &quot;/foo/bar/file.txt
+//                    Directory bar in directory foo in root
+// return value = file descriptor or -1 on error
+// Which is an index into table of open file descriptions for each proc
+// Used by syscalls that deal with open files</code></pre><ul id="f60070de-0410-4e03-b153-68fa202812b7" class="bulleted-list"><li style="list-style-type:circle">Implementing file descriptors in xv6 <pre id="d9f5c60e-c7fe-4aa5-85f3-9888b5d92196" class="code"><code>struct proc {
+	...
+	struct file *ofile[NOFILE];
+};
+// ofile[0] = file descriptor 0
+// pointer can be shared between procs, do not do deep copy on fork
+// Null pointers - no file open with that number
+
+struct file {
+	enum { FD_NONE, FD_PIPE, FD_INODE } type;
+				// None, talk to other proc , other kind of file
+				// Linux solution: pointer to list of functions
+	int ref; 
+				// reference count || # of pointers to this struct file
+	char readable;  
+	char writable;
+				// Flags for read/write
+	struct pipe *pipe;
+	struct inode *ip;
+	uint off;
+			// location in file (not always meaningful)
+};</code></pre><ul id="343ef1e8-a90e-49da-bab4-3e853017bc72" class="bulleted-list"><li style="list-style-type:square">Special file descriptors<ul id="83e3b6c0-3e6d-4545-b534-3270ad7878ca" class="bulleted-list"><li style="list-style-type:disc">0 = standard input</li></ul><ul id="62fa6d51-2856-4119-ae85-848dbf43fcd5" class="bulleted-list"><li style="list-style-type:disc">1  = standard output</li></ul><ul id="779e5d86-f994-4621-8d67-760df14b6fc0" class="bulleted-list"><li style="list-style-type:disc">2  = standard error</li></ul><ul id="dab32294-cda8-45f2-8e0d-2421baa88896" class="bulleted-list"><li style="list-style-type:disc">Constants in <code>unistd.h</code> <ul id="8db83dcc-9ae4-43e3-b937-7eb2a6bc6e7d" class="bulleted-list"><li style="list-style-type:circle"><code>STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO</code></li></ul></li></ul></li></ul></li></ul><ul id="2d8f3794-8791-43d8-9415-1a47ac5d5973" class="bulleted-list"><li style="list-style-type:circle"><code>close()</code><ul id="72781e24-6318-4324-b565-220145614606" class="bulleted-list"><li style="list-style-type:square"><code>int close(int fd);</code></li></ul><ul id="fdcd1eb3-8694-4d7e-942d-75e036ab40ef" class="bulleted-list"><li style="list-style-type:square">close the file descriptor, deallocating that array index<ul id="e016f901-5c8d-4a87-9845-8954cd218136" class="bulleted-list"><li style="list-style-type:disc">does not effect <strong>other file descriptors</strong> that refer to same <strong>open file descriptor</strong></li></ul></li></ul><ul id="a456eefc-6fc6-4a2d-b61a-dba573e87a78" class="bulleted-list"><li style="list-style-type:square">if last file descriptor for <code>*ofile[]</code> , resources deallocated<ul id="c9050bdd-e327-4c31-90d1-b43fa1129428" class="bulleted-list"><li style="list-style-type:disc">return 0 on success</li></ul><ul id="5a51229a-f13b-41c7-a016-6defacc7e563" class="bulleted-list"><li style="list-style-type:disc">return -1 on error: i.e. not enough disk space while saving</li></ul></li></ul></li></ul><p id="3ebaa80a-1217-4a28-beb9-406539954c24" class="">
+</p><ul id="f4e836e1-9f9a-4d0e-8f68-faf26f8bca70" class="bulleted-list"><li style="list-style-type:circle">reassigning file descriptors<ul id="becf3bc7-2eed-49c2-9fa8-68ba3c5b9594" class="bulleted-list"><li style="list-style-type:square">step 1: open output.txt for writing, get new file descriptor</li></ul><ul id="401854ce-1a2e-4964-975a-e6cd415c3803" class="bulleted-list"><li style="list-style-type:square">step 2: make that new file descriptor stdout (1)</li></ul><ul id="321410bb-24ea-447c-afdc-898bf6adcde2" class="bulleted-list"><li style="list-style-type:square">we want to set <code>ofile[1] = ofile[opened-fd</code><ul id="c5dbac5b-0d74-4ee9-8021-05f1d1b7012c" class="bulleted-list"><li style="list-style-type:disc">we cant access <code>ofile</code> from userspace</li></ul><ul id="1c6c2249-9645-4fff-9587-8d02055c0b7c" class="bulleted-list"><li style="list-style-type:disc">so we use syscall <code>dup2(opened-fd, 1)</code></li></ul></li></ul><ul id="27338aa5-6655-4220-a1cc-818fbd4ac29f" class="bulleted-list"><li style="list-style-type:square"><code>int dup2( int oldfd, int newfd)</code><ul id="f63e0dab-6e4d-47c8-b7eb-d45fd5647e00" class="bulleted-list"><li style="list-style-type:disc">same open file description</li></ul><ul id="f4de6cb7-dda8-489d-9b0b-879ff05b36c4" class="bulleted-list"><li style="list-style-type:disc">shares the current location in the file (even after additional reads/writes)</li></ul><ul id="bbec4487-8ab2-486c-b262-289329a2944d" class="bulleted-list"><li style="list-style-type:disc">if <code>newfd</code> already allocated, closed, then reused</li></ul><pre id="c8033979-dd36-4951-835e-0c14ed8dbdd3" class="code"><code>fflush(stdout); /* clear printf&#x27;s buffer */ 
+int fd = open(&quot;output.txt&quot;,
+              O_WRONLY | O_CREAT | O_TRUNC);
+if (fd &lt; 0)
+    do_something_about_error();
+dup2(fd, STDOUT_FILENO);
+/* now both write(fd, ...) and write(STDOUT_FILENO, ...)
+   write to output.txt
+   */
+close(fd); /* only close original, copy still works! */ 
+printf(&quot;This will be sent to output.txt.\n&quot;);</code></pre></li></ul></li></ul><ul id="adb58bc0-1943-4c21-b9b9-de7052cc4aab" class="bulleted-list"><li style="list-style-type:circle">read/write<pre id="38e57b5c-75bd-4de5-a6d1-c401eb5ba854" class="code"><code>ssize_t read(int fd, void *buffer, size_t count); 
+ssize_t write(int fd, void *buffer, size_t count);</code></pre><ul id="61496ff7-2192-4190-8fa0-26a59ea3145f" class="bulleted-list"><li style="list-style-type:square">read/write ip to count bytes to/from buffer</li></ul><ul id="698de55d-2a7d-421e-ae20-fe86f388846a" class="bulleted-list"><li style="list-style-type:square">returns number of bytes read/written or -1 on error<ul id="edb5d36d-fd55-4a42-9b05-59fc210c9f97" class="bulleted-list"><li style="list-style-type:disc"><code>ssize_t</code> is signed integer</li></ul><ul id="6c08c072-939c-42f2-b4fe-17835cb3db0b" class="bulleted-list"><li style="list-style-type:disc">error code in <code>errno</code></li></ul></li></ul><ul id="3320b189-a953-4eda-ac3f-1e782206f7ed" class="bulleted-list"><li style="list-style-type:square">read return 0 means end-of-file</li></ul><ul id="c8d417e6-87f0-471a-8884-7c3009b41907" class="bulleted-list"><li style="list-style-type:square">Examples:<pre id="482c41f7-9e66-4992-85be-0fccd880f32e" class="code"><code>string s;
+ssize_t amount_read;
+char c;
+/* cast to void * not needed in C */ *
+while ((amount_read = read(STDIN_FILENO, (void ) &amp;c, 1)) &gt; 0)
+    /* amount_read must be exactly 1 */
+	s += c; 
+}
+if (amount_read == −1) {
+	/* some error happened */
+	perror(&quot;read&quot;); /* print out a message about it */
+} 
+else if (amount_read == 0) {
+    /* reached end of file */
+}
+
+/* cast to void * optional in C */
+write(STDOUT_FILENO, (void *) &quot;Hello, World!\n&quot;, 14);</code></pre></li></ul><ul id="93e631ba-c034-4bae-bb26-752cdc62ff03" class="bulleted-list"><li style="list-style-type:square">Exercise:<pre id="030dfb61-c2f1-447c-80c2-ce286e3fe983" class="code"><code>int fd = open(&quot;output.txt&quot;, O_WRONLY|O_CREAT|O_TRUNC, 0666); 
+write(fd, &quot;A&quot;, 1); // output.txt = A
+dup2(STDOUT_FILENO, 100); // 
+dup2(fd, STDOUT_FILENO);
+write(STDOUT_FILENO, &quot;B&quot;, 1);
+write(fd, &quot;C&quot;, 1);
+close(fd);
+write(STDOUT_FILENO, &quot;D&quot;, 1);
+write(100, &quot;E&quot;, 1);
+
+/*
+Assume open() and dup2() do not fail, write() does not fail as 
+long as the fd it writes to is open, fd 100 was closed and 
+is not what open returns, and STDOUT_FILENO is initially open. 
+What is written to output.txt?
+A. ABCDE C.ABC
+B. ABCD D. ACD
+E. something else
+*/
+
+fd = output.txt
+output.txt = A
+fd[100] = stdout file # is
+stdout = fd = A
+stdout = AB
+fd = ABC
+close fd = ABCD // close the file, so stdout goes to terminal now
+stdout = ABCD //</code></pre></li></ul></li></ul><ul id="df1d3df6-b2da-4266-a1e0-740adada61b6" class="bulleted-list"><li style="list-style-type:circle"><code>pipe()</code><ul id="0189d313-97cb-4c3a-9a1c-bedf800450f1" class="toggle"><li><details open=""><summary><strong>MAN PAGE</strong></summary><pre id="cb49b610-6f42-4472-aa9b-f0e90aae11ae" class="code code-wrap"><code>PIPE(2)                        System Calls Manual                       PIPE(2)
+NAMEpipe - create descriptor pair for interprocess communication
+
+SYNOPSIS#include&lt;unistd.h&gt;intpipe(intfildes[2]);
+
+DESCRIPTION
+
+     Thepipe() function creates apipe (an object that allows unidirectional
+     data flow) and allocates a pair of file descriptors.  The first descriptor
+     connects to thereadend of the pipe; the second connects to thewriteend.
+
+     Data written tofildes[1] appears on (i.e., can be read from)fildes[0].
+     This allows the output of one program to be sent to another program: the
+     source&#x27;s standard output is set up to be the write end of the pipe; the
+     sink&#x27;s standard input is set up to be the read end of the pipe.  The pipe
+     itself persists until all of its associated descriptors are closed.
+
+     A pipe whose read or write end has been closed is consideredwidowed.
+     Writing on such a pipe causes the writing process to receive a SIGPIPE
+     signal.  Widowing a pipe is the only way to deliver end-of-file to a
+     reader: after the reader consumes any buffered data, reading a widowed pipe
+     returns a zero count.
+
+     The generation of the SIGPIPE signal can be suppressed using the
+     F_SETNOSIGPIPE fcntl command.
+
+RETURN VALUES
+
+     On successful creation of the pipe, zero is returned. Otherwise, a value of
+     -1 is returned and the variableerrno set to indicate the error.
+
+ERRORS
+
+     Thepipe() call will fail if:
+
+     [EFAULT]           Thefildes buffer is in an invalid area of the process&#x27;s
+                        address space.
+
+     [EMFILE]           Too many descriptors are active.
+
+     [ENFILE]           The system file table is full.
+
+SEE ALSOsh(1),fork(2),read(2),socketpair(2),fcntl(2),write(2)HISTORY
+
+     Apipe() function call appeared in Version 6 AT&amp;T UNIX.
+
+BSD 4                           February 17, 2011                          BSD 4
+</code></pre></details></li></ul><ul id="e1d1418a-5265-4e86-ab5d-55a9b90826c0" class="bulleted-list"><li style="list-style-type:square">bytes go in one end, come out the other, ONCE</li></ul><ul id="7d98a74a-115a-4cb8-9550-f72d8e417f3b" class="bulleted-list"><li style="list-style-type:square">created with <code>pipe()</code> library call</li></ul><ul id="72da2fed-0427-488e-9d69-7039cc487fff" class="bulleted-list"><li style="list-style-type:square">intended use: communicate between procs, like implementing shell pipelines</li></ul><ul id="b012cae6-dd40-4c65-a1e0-5f6be0d46492" class="bulleted-list"><li style="list-style-type:square">EXAMPLE:</li></ul><pre id="e68b949e-9673-411d-a30c-ec4fe99d01d3" class="code code-wrap"><code>// because we fork before init the pipe, the parent and child do 
+// not have access to the same pipe
+pid_t p = fork();
+int pipe_fds[2]; // these two lines
+pipe(pipe_fds);  // should be moved to before fork()
+if(p==0){/* child */
+	close(pipe_fds[0]);
+	char c = &#x27;A&#x27;;
+	write(pipe_fds[1], &amp;c, 1);
+	exit(0);
+} else { /* parent */ 
+	close(pipe_fds[1]);
+	char c;
+	int count = read(pipe_fds[0], &amp;c, 1);
+	printf(&quot;read %d bytes\n&quot;, count);
+}</code></pre><ul id="3e2d7fb2-fa5f-4f47-aa9a-b31ab7ca74fc" class="bulleted-list"><li style="list-style-type:square">Partial reads<ul id="4f91b11e-d18e-47d9-8d28-a559a8ec4856" class="bulleted-list"><li style="list-style-type:disc">read returning 0 always means end-of-file</li></ul><ul id="f823e86b-dbeb-4ff4-a0a9-3d6f6fdd2431" class="bulleted-list"><li style="list-style-type:disc">by default, read always waits if no input available yet. but can set read to return error instead of waiting</li></ul><ul id="1048b991-5054-42d3-aa9a-d4a1a48c41b0" class="bulleted-list"><li style="list-style-type:disc">read can return less than requested if not available<ul id="390ee8c3-8e03-4bd0-af5f-385bd1e2ddce" class="bulleted-list"><li style="list-style-type:circle">e.g. child hasn&#x27;t gotten far enough to have data available to read.</li></ul></li></ul><ul id="a2238629-a8ea-48f8-afc5-bf933359be32" class="bulleted-list"><li style="list-style-type:disc">on regular file: read reads what you requested</li></ul><ul id="cb25fbb5-eb31-4819-81a0-31e68a901abc" class="bulleted-list"><li style="list-style-type:disc">otherwise: usually gives you what’s available<ul id="7612de1d-ac81-4b80-b45f-8f6ca0c484a0" class="bulleted-list"><li style="list-style-type:circle">network: what&#x27;s been received</li></ul><ul id="ec9ac99d-3c47-4087-be54-2363654c8604" class="bulleted-list"><li style="list-style-type:circle">keyboard: what&#x27;s been typed</li></ul></li></ul></li></ul><ul id="a7fb5a11-b9f4-4aee-a703-f8cac02d40c5" class="bulleted-list"><li style="list-style-type:square">Blocking:<ul id="d62ee5c3-0c41-46f7-9d8b-0d6f89045759" class="bulleted-list"><li style="list-style-type:disc">Pipes only have so much space, if you fill them, you will block new writes</li></ul></li></ul></li></ul></li></ul><h3 id="127bf023-c9a2-4de9-94ca-bc3e53950520" class="">xv6: process table</h3><ul id="55f9c051-9b71-4185-a5b1-0d7abf0d7b84" class="bulleted-list"><li style="list-style-type:disc">fixed size array of all procs</li></ul><ul id="0b0e609f-2a5d-47c7-ada2-a70417cd26a6" class="bulleted-list"><li style="list-style-type:disc">Lock to keep one thing accessing at a time<ul id="c4ebe858-b3bc-4c61-9cae-82ec6bff9587" class="bulleted-list"><li style="list-style-type:circle">don&#x27;t change prostate without querying lock<pre id="11261e60-6d13-4df8-9d00-6cf20a7da7ba" class="code"><code>struct {
+struct spinlock lock; struct proc proc[NPROC]
+} ptable;</code></pre></li></ul><ul id="a071b355-6d98-4b83-a8dd-862808ada70f" class="bulleted-list"><li style="list-style-type:circle">Allocating a struct proc<pre id="5e716c2a-3651-404f-9628-c6fbb61d30eb" class="code"><code>aquire(&amp;ptable.lock);
+
+for(p = ptable.proc; p &lt; &amp;ptable.proc[NPROC]; p++)
+	if(p-&gt;state == UNUSED)
+		goto found;
+release(&amp;ptable.lock);
+// search PCB for unused state
+// if none found, fork fails
+// o.w. allocate memory, etc</code></pre></li></ul></li></ul><ul id="b3f38ea3-e976-4cef-aebe-b1b41b7458f0" class="bulleted-list"><li style="list-style-type:disc">Creating the first proc<figure id="d80d6b92-eff7-4f21-bcea-382f4d05eac4" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-08_at_1.14.25_PM.png"><img style="width:1600px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-08_at_1.14.25_PM.png"/></a></figure></li></ul><ul id="aa9c3459-ba3e-4417-bab9-373f70d489fa" class="bulleted-list"><li style="list-style-type:disc">Thread States<ul id="1ba03dca-d2b4-4701-acab-d167bc043bde" class="bulleted-list"><li style="list-style-type:circle"><code>EMBRYO, RUNNABLE, SLEEPING, RUNNING, ZOMBIE</code><ul id="942d893b-9a43-45c9-b196-279f0b2aa82d" class="bulleted-list"><li style="list-style-type:square">EMBYRO: being created, but not ready to run</li></ul><ul id="157eb9cc-7ef4-467b-801f-9bafbd33ee32" class="bulleted-list"><li style="list-style-type:square">RUNNABLE: could be put on CPU</li></ul><ul id="9957385a-ced1-49fe-ae33-c48e0e1c965e" class="bulleted-list"><li style="list-style-type:square">SLEEPING: need external event to happen</li></ul><ul id="9810519c-b7fc-4951-b228-a34187e02de3" class="bulleted-list"><li style="list-style-type:square">RUNNING: On the CPU</li></ul><ul id="962224da-636d-4241-8f9b-8d3b0fd13cdd" class="bulleted-list"><li style="list-style-type:square">ZOMBIE: done, but being waited for</li></ul></li></ul><ul id="70718e3c-b12c-46b4-aea7-c649530dcc47" class="bulleted-list"><li style="list-style-type:circle">Threads in Queues<figure id="8e615e15-346b-41a3-b986-8a65994a9959" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-08_at_1.20.05_PM.png"><img style="width:1586px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-08_at_1.20.05_PM.png"/></a></figure><ul id="c6f7c1b8-c7bc-4772-ad20-a8df74282f44" class="bulleted-list"><li style="list-style-type:square">Queues in xv6<ul id="44c03341-20e3-4c37-a863-248c9bef19e3" class="bulleted-list"><li style="list-style-type:disc">xv6 doesn&#x27;t have a queue class/struct</li></ul><ul id="7a618f46-a04f-450e-9c00-4533376d13f2" class="bulleted-list"><li style="list-style-type:disc">ready queue = proc list ignoring non-RUNNABLE entries</li></ul><ul id="0ed71ca5-dab1-4eb3-931b-0c694c2e04f6" class="bulleted-list"><li style="list-style-type:disc">I/O queues: proc list where SLEEPING, chan = I/O device</li></ul></li></ul></li></ul></li></ul><ul id="d7e5871c-ae6f-4ba4-8249-d86db7047ec1" class="bulleted-list"><li style="list-style-type:disc"><strong>Scheduling</strong>: removing proc/thread to remove from queue<ul id="dc510b7c-99da-40eb-ba1c-f0f7437befc5" class="bulleted-list"><li style="list-style-type:circle">policy: what to remove from queue<ul id="b6f41a86-a947-4cec-ab9a-b09e563c834f" class="bulleted-list"><li style="list-style-type:square">xv6 is basically a round-robin policy</li></ul></li></ul><ul id="cd7d610f-f45a-442c-bbe6-aebb7adc2d01" class="bulleted-list"><li style="list-style-type:circle">xv6: during proc switch, we actually switch to the <code>scheduler()</code> function, who decides to switch to the other proc<figure id="62223d79-5a74-4f98-96b9-b126bf117563" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-08_at_1.25.40_PM.png"><img style="width:1420px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-08_at_1.25.40_PM.png"/></a></figure><ul id="79fbdc81-c9c7-49e5-9854-8458849abc23" class="bulleted-list"><li style="list-style-type:square">when we call <code>switch(&amp;(c-&gt;scheduler), p-&gt;context);</code></li></ul><pre id="59372d5e-d2c9-4e75-953b-fa124437d3db" class="code"><code>c-&gt;proc = p;
+switchuvm(p); // addr space switch
+p-&gt;state = RUNNING;
+
+switch(&amp;(c-&gt;scheduler), p-&gt;context); // go and run the process
+switchkvm(); // proc finished, change addr space back
+
+c-&gt;proc = 0;</code></pre></li></ul><ul id="dafc7520-ea49-4d15-bc77-935aae69dcc0" class="bulleted-list"><li style="list-style-type:circle"><code>yield()</code><pre id="5c8c7f3b-e0cc-43dd-879b-26239a53f999" class="code"><code>void yield() {
+	acquire(&amp;ptable.lock);
+	myproc()-&gt;state = RUNNABLE; // from RUNNING to RUNNABLE
+	sched(); // switch to scheduler
+	release(&amp;ptable.lock); // unlock before running user code and returning to
+												 // the caller function</code></pre></li></ul><ul id="4617c7b9-ecbc-4ffa-90e7-caa4faf8594e" class="bulleted-list"><li style="list-style-type:circle"><code>sleep()</code><pre id="b5e29874-58cc-4b7b-8707-7e243e4d8232" class="code"><code>void sleep(void *chan, ...) {
+	acquire(&amp;ptable.lock);
+	...
+	p-&gt;chan = chan; // why did we sleep, I/O, etc.
+	p-&gt;state = SLEEPING;
+
+	sched();
+	...
+	release(&amp;ptable.lock);</code></pre></li></ul><ul id="875373f9-4f9c-42cb-b9f5-b98626ee1ede" class="bulleted-list"><li style="list-style-type:circle">CPU and IO Bursts<ul id="e2007b88-c4ca-49d1-b85b-689c889c6c4c" class="bulleted-list"><li style="list-style-type:square">program alternates between computing and waiting for IO</li></ul></li></ul><ul id="13522f8b-531f-4038-99b3-09f2311f0c32" class="bulleted-list"><li style="list-style-type:circle">Scheduling Metrics<ul id="c51e7ab8-b749-416a-9c1d-56313c3fbb97" class="bulleted-list"><li style="list-style-type:square">Different metrics (all metrics are in conflict with each other)<ul id="1a6c79d3-8780-484f-8a51-f892650d8807" class="bulleted-list"><li style="list-style-type:disc"><strong>turnaround time</strong> (response time) (latency)<ul id="1c360593-9c66-463d-91be-ae7f57aafe7f" class="bulleted-list"><li style="list-style-type:circle">time between keypress to char on screen</li></ul><ul id="81238a96-79a7-4039-9c56-f1881617faf4" class="bulleted-list"><li style="list-style-type:circle">job goes from runnable to not runnable</li></ul><ul id="181b002d-e92b-4f60-89ae-d59d140bb256" class="bulleted-list"><li style="list-style-type:circle">Scheduling CPU bursts<ul id="6617876c-1785-49d1-a232-80c91b7a61d8" class="bulleted-list"><li style="list-style-type:square">time to start next IO</li></ul><ul id="f3635df2-cf18-4afe-b8ac-2da818c70e40" class="bulleted-list"><li style="list-style-type:square">we want to fully utilize IO divices</li></ul></li></ul></li></ul><ul id="fb146d80-4ab4-4ec4-af24-500f4439e197" class="bulleted-list"><li style="list-style-type:disc"><strong>throughput</strong>: useful work done per unit time<ul id="d2010008-2462-4454-9d2e-a013e0c22fc4" class="bulleted-list"><li style="list-style-type:circle">total WORK per second</li></ul><ul id="8b3cd2e8-c781-4f16-9a2e-6fd2a3d19afe" class="bulleted-list"><li style="list-style-type:circle">we have a problem of overhead (context switch)<ul id="08f21d90-e40a-4f7b-99b6-6cb0b7ca1538" class="bulleted-list"><li style="list-style-type:square">The higher overhead, the less time exec our programs</li></ul></li></ul><ul id="ac00796a-7410-4dce-80fa-8a73e4c6e09b" class="bulleted-list"><li style="list-style-type:circle">other considerations:<ul id="8125f495-c123-4b1c-96cb-9f595315d5ac" class="bulleted-list"><li style="list-style-type:square">time lost due to cold cache<ul id="12c63fd8-8754-422b-9ac9-ae212ce00a53" class="bulleted-list"><li style="list-style-type:disc">This it the fact that our CPU’s cache is full of the data for the last program. We have to load out cache with our current program’s data and instructions</li></ul></li></ul></li></ul></li></ul><ul id="0de7d905-35c0-4227-a622-038db9b56b51" class="bulleted-list"><li style="list-style-type:disc"><strong>fairness</strong><ul id="a1d6908e-1e78-4e1a-9f2c-aa9a8ce3069a" class="bulleted-list"><li style="list-style-type:circle">many definition</li></ul><ul id="dccc4e40-538a-4b40-bdfa-fedf9eb5f79b" class="bulleted-list"><li style="list-style-type:circle">all conflict with best average throughput or turnaround time</li></ul></li></ul><ul id="197dce31-98cf-4ce2-a668-79172356be7f" class="bulleted-list"><li style="list-style-type:disc">Exercise:<figure id="c14bbde6-5ba8-48df-908b-1ce55fd2be5f" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-10_at_12.43.08_PM.png"><img style="width:1632px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-10_at_12.43.08_PM.png"/></a></figure><ol type="1" id="01f1e44a-6830-4bdb-b161-eda5fdc55408" class="numbered-list" start="1"><li>throughput, turnaround</li></ol><ol type="1" id="c5ae0477-8153-4fc0-91fc-1d76e973bb67" class="numbered-list" start="2"><li>fairness - b.c. B gets a bad deal on 3.<ol type="a" id="65795461-c64e-47c1-9ab7-51698b84de07" class="numbered-list" start="1"><li>Responsiveness (minimizing waiting after IO call)</li></ol></li></ol><ol type="1" id="5e6aabf8-bc4c-4334-b630-c91e62566a3d" class="numbered-list" start="3"><li>none</li></ol></li></ul></li></ul><ul id="dcd9a8ce-2ade-43be-b1e0-de7dbf5923a4" class="bulleted-list"><li style="list-style-type:square">two trivial scheduling algos<ul id="013c6558-4729-4dda-bd26-76d6f26a5b2b" class="bulleted-list"><li style="list-style-type:disc">FIFO (FCFS)<ul id="e767cca0-85e2-447e-8ab8-36eeff2da6f0" class="bulleted-list"><li style="list-style-type:circle">Simplest: run program until you cant</li></ul><ul id="54454dfa-054b-489a-b8d9-1881b10d2b25" class="bulleted-list"><li style="list-style-type:circle">useful when you want to minimize context switches due to low memory</li></ul></li></ul><ul id="c7b577ad-cf6f-4fc7-ab2a-e729c981ed8e" class="bulleted-list"><li style="list-style-type:disc">Round Robin → <strong>what xv6 uses</strong><ul id="d77617ef-e59e-48e8-bf4c-1a1961f190ad" class="bulleted-list"><li style="list-style-type:circle">Simplest that fixes FIFO drawback</li></ul><ul id="4ffce9d0-52d5-4465-bc2c-fa1d4a4f4efa" class="bulleted-list"><li style="list-style-type:circle">run program until either<ul id="c5f803d2-7387-4a10-94ba-ecf02d5dc367" class="bulleted-list"><li style="list-style-type:square">it cant run anymore</li></ul><ul id="9c36f6af-77c4-4114-afe4-149b0e4dad6f" class="bulleted-list"><li style="list-style-type:square">it exceeds some time limit → <strong>time quantum</strong></li></ul></li></ul><ul id="c18db420-c9ad-4863-aff9-2581a6bbd456" class="bulleted-list"><li style="list-style-type:circle">requires good way to interrupt programs<ul id="9fc9df22-907b-4562-81bd-b8c4d967d0c5" class="bulleted-list"><li style="list-style-type:square">xv6 timer interrupt</li></ul></li></ul><ul id="5c20ecd8-411e-44f6-abbe-d331785bb5dd" class="bulleted-list"><li style="list-style-type:circle">requires good way to stop programs at interrupt<ul id="d96d1881-c3b6-42b0-8de9-df89fdc7bf42" class="bulleted-list"><li style="list-style-type:square">xv6 context switch</li></ul></li></ul><ul id="d66011b1-d693-435e-a2e7-2c106e66739c" class="bulleted-list"><li style="list-style-type:circle">Idea:<figure id="501d0dd3-003f-492b-a322-8723899e3f82" class="image"><a href="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-10_at_1.14.20_PM.png"><img style="width:1570px" src="The%20Unix%20API%20f1fc7bd3523841c0801f0230f56531a9/Screen_Shot_2022-02-10_at_1.14.20_PM.png"/></a></figure><ul id="93e953c4-2e66-4f03-8f68-fd37c50e19b4" class="bulleted-list"><li style="list-style-type:square">choose <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo>=</mo><mtext>time quantum</mtext></mrow><annotation encoding="application/x-tex">Q = \text{time quantum}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">Q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8623000000000001em;vertical-align:-0.19444em;"></span><span class="mord text"><span class="mord">time quantum</span></span></span></span></span></span><span>﻿</span></span></li></ul><ul id="da29784d-4e32-4b61-8e08-1db3ce139fbd" class="bulleted-list"><li style="list-style-type:square">switch to next process in ready queue</li></ul><ul id="0c339a0a-469a-4e3d-b325-115b9d3eae45" class="bulleted-list"><li style="list-style-type:square">RR = FCFS : where  <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo>=</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">Q = \infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">Q</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord">∞</span></span></span></span></span><span>﻿</span></span></li></ul></li></ul><ul id="5e930c31-5006-4834-9ff5-24d24c3f3fc1" class="bulleted-list"><li style="list-style-type:circle">Context Switch aside</li></ul><div><ul id="63a8de22-b4c0-4072-9b01-81f4ae2614c2" class="bulleted-list"><li style="list-style-type:disc">Typical context switch <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mn>0.01</mn><mi>m</mi><mi>s</mi><mo>→</mo><mn>0.1</mn><mi>m</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">\sim 0.01ms \to 0.1ms</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0.01</span><span class="mord mathnormal">m</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0.1</span><span class="mord mathnormal">m</span><span class="mord mathnormal">s</span></span></span></span></span><span>﻿</span></span></li></ul><ul id="1c6e19bc-3605-4355-9269-90c8348e2fe5" class="bulleted-list"><li style="list-style-type:disc">choose time quantum to manage this overhead</li></ul><ul id="f521d0b1-3f66-455e-b712-07cf59dc77e4" class="bulleted-list"><li style="list-style-type:disc">Linux Default: <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><mn>0.75</mn><mi>m</mi><mi>s</mi><mo>→</mo><mn>6</mn><mi>m</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">\sim 0.75ms \to 6ms</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0.75</span><span class="mord mathnormal">m</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord mathnormal">m</span><span class="mord mathnormal">s</span></span></span></span></span><span>﻿</span></span></li></ul><ul id="7bf099ad-c507-4659-b023-7a28953f4cb0" class="bulleted-list"><li style="list-style-type:disc">Historical: <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>m</mi><mi>s</mi><mo>→</mo><mn>100</mn><mi>m</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">1ms \to 100ms</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord mathnormal">m</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">100</span><span class="mord mathnormal">m</span><span class="mord mathnormal">s</span></span></span></span></span><span>﻿</span></span></li></ul></div><ul id="599a138f-8b3b-446e-b2f8-cf9c7f087fac" class="bulleted-list"><li style="list-style-type:circle">Minimizing turnaround time with order<ul id="2729c74e-af30-4c71-a69e-e2d8206fd7c6" class="bulleted-list"><li style="list-style-type:square">best mean turnaround time = run shortest CPU burst first</li></ul><ul id="6dbea801-d648-4418-a102-0ef84bab53cb" class="bulleted-list"><li style="list-style-type:square">worst mean turnaround time = run longest CPU burst first</li></ul><ul id="ca885320-04f5-4450-8ee4-94f814997ac3" class="bulleted-list"><li style="list-style-type:square">Intuition 1: <strong>race to go to sleep</strong></li></ul><ul id="63f64884-ef0a-47af-85eb-5a54b62d306b" class="bulleted-list"><li style="list-style-type:square">Intuition 2: <strong>minimize time with two threads waiting</strong></li></ul></li></ul><ul id="91339248-c112-47af-98f7-8cd1ca0c7204" class="bulleted-list"><li style="list-style-type:circle"><strong>Priority Scheduling</strong><ul id="1343386d-7748-495c-83c3-f97307f4a92b" class="bulleted-list"><li style="list-style-type:square">What if some users are <em>MORE EQUAL</em> than others?<ul id="108df2b3-a014-4ba6-98ad-c179c1c2620a" class="bulleted-list"><li style="list-style-type:disc">Shells are more important than big computes</li></ul><ul id="c7330fe6-2855-40ec-9e53-4b3bc00267a7" class="bulleted-list"><li style="list-style-type:disc">Faculty programs are more important than students</li></ul><ul id="11ae3db9-e82d-478a-8f5f-c853d0e4eb70" class="bulleted-list"><li style="list-style-type:disc">algo: schedule more important ones first</li></ul></li></ul><ul id="fb465225-c2c5-4d85-a0df-1acc5a99306a" class="bulleted-list"><li style="list-style-type:square">choose proc from ready queue for highest priority<ul id="d79ad3b2-29de-42d6-ae2b-297e8af3ef56" class="bulleted-list"><li style="list-style-type:disc">within each priority level use some other scheduling policy</li></ul><ul id="4add0e97-4769-4fad-b50e-aa3316cc808d" class="bulleted-list"><li style="list-style-type:disc">they can be preemptive, when higher priority proc is RUNNABLE, stop the current proc and run the higher priority proc</li></ul></li></ul><ul id="081b0de5-7abd-44f7-9f00-d813147c3f2b" class="bulleted-list"><li style="list-style-type:square">Starvation:<ul id="147b77b5-4d97-44e0-b0d3-d6125a651b22" class="bulleted-list"><li style="list-style-type:disc">programs can be starved of resources because of being too low in the priority</li></ul><ul id="b8420ffc-f0af-48d6-8200-8e44d348d364" class="bulleted-list"><li style="list-style-type:disc">this is why we have the fairness metric</li></ul><p id="b7b4ee1d-d16a-4ba6-bada-96a18ec41847" class="">
+</p></li></ul></li></ul></li></ul></li></ul></li></ul></li></ul></div></article></body></html>

@@ -1,0 +1,26 @@
+footer {
+  margin-left: auto;
+  margin-right: auto;
+}
+footer .foot-nav {
+  border-top: solid 2px #964cdf;
+  border-bottom: solid 2px black;
+}
+footer .foot-nav a:any-link {
+  color: #964cdf;
+}
+footer .foot-nav a:hover {
+  color: #fc0000;
+}
+footer .copyright {
+  text-decoration: wavy;
+  color: #964cdf;
+}
+#intro {
+  border-top: solid 2px #964cdf;
+  border-bottom: solid 2px black;
+}
+.bordered {
+  border-top: solid 2px #964cdf;
+  border-bottom: solid 2px black;
+}

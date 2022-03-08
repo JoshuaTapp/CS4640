@@ -1,0 +1,277 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+header > h1 {
+	padding: 2%;
+}
+
+* {
+	margin-bottom: 22px;
+}
+
+.image-responsive {
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 50% ;
+	height: auto;
+	align-content: center;
+}
+
+.box-responsive {
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width: 100% ;
+	height: auto;
+	align-content: center;
+}
+
+* .container {
+	margin-bottom: 22px;
+	display: grid ;
+	grid-template-columns: auto;
+	
+}
+
+section {
+	padding: 25px;
+	width: 50%;
+	margin: auto;
+	background-color: floralwhite ;
+}
+
+section > section {
+	background-color: blanchedalmond;
+}
+
+.container > h4 {
+	text-align: center;
+	font-size: larger;
+}
+
+.resume-container {
+	display: block;
+	position: relative;
+	width: 100%;
+	padding-top: 70%;
+	text-align: center;
+
+}
+  
+  /* Then style the iframe to fit in the container div with full height and width */
+.responsive-iframe {
+	position: absolute;
+	overflow: hidden;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 90%;
+	height: 90%;
+	margin: auto;
+  }
+
+
+.copyright {
+	float: left;
+	padding: 20px;
+	margin: auto;
+}
+
+h1 {
+	text-align: center;
+	font-size: xx-large;
+	
+}
+
+h2, h3 {
+	text-align: center;
+	font-size: larger;
+	padding: 10px;
+	
+}
+
+
+section > p {
+	padding: 20px;
+	margin: auto;
+}
+
+#section1 {
+	background-color: cornsilk;
+	padding: 10px;
+	margin-bottom: 10px;
+
+}
+#section1 > ul {
+	padding-left: 30px;
+}
+
+#section2 {
+	background-color: blanchedalmond;
+	padding: 10px;
+	margin-bottom: 10px;
+
+}
+#section2 > ul {
+	padding-left: 30px;
+}
+
+.list > li {
+	list-style-type: disc;
+	padding-bottom: 10px;
+}
+
+.highlight > p {
+	background-color: cornsilk;
+}
+
+.highlight > a {
+	margin-top: 1%;
+	margin-bottom: 1%;
+	color: #000;
+}
+
+.navbar {
+	width: 100%;
+	background-color: #555;
+	overflow: auto;
+  }
+
+.navbar  a {
+	float: left;
+	text-align: center;
+	padding: 12px;
+	color: white;
+	text-decoration: none;
+	font-size: 17px;
+}
+
+
+.navbar a:hover {
+	background-color: #000;
+  }
+
+footer {
+	text-align: center;
+	height: 90px;
+	background-color: #555;
+	position: relative;
+}
+
+footer  a, small{
+	color: white;
+}
+
+footer .navbar ~ a {
+	text-align: center;
+	padding: 12px;
+	color: white;
+	text-decoration: none;
+	font-size: 17px;
+}
+
+  * {
+	box-sizing: border-box;
+	column-width: 8.33;
+   } 
+
+
+
+@media only screen and (max-width: 768px) {
+	/* For mobile phones and tablets: */
+	[class*="col-"] {
+		width: 100%;
+	}
+} 
+
+@media only screen and (min-width: 768px) {
+	.row {
+		width: 100%;
+	}
+
+	.col-12 {
+		width: 100%;
+	}
+
+	.col-8 {
+		width: 66.66%;
+	}
+
+	.col-4 {
+		width: 33.33%;
+	}
+}
+
+
+
+#foot-nav {
+	color: white;
+}
+
+#resume-pdf-link {
+	text-align: center;
+	color: black;
+	margin: auto;
+	display: block;
+}
+@media only screen and (max-width: 600px) {
+	.resume-container {
+		display: none;
+	}
+} 
+
+@media only screen and (min-width: 600px) {
+	#resume-download {
+		display: none;
+	}
+} 
+
+

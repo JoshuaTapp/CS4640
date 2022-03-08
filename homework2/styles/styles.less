@@ -1,0 +1,31 @@
+@link-color:       #964cdf;  
+@link-color-hover: #fc0000;
+
+
+
+footer {
+    margin-left: auto;
+    margin-right: auto;
+
+    .foot-nav > {
+        a:any-link{
+            color: @link-color;
+        }
+        a:hover{
+            color: @link-color-hover;
+        }
+        .bordered();
+    }
+    .copyright {
+        text-decoration: wavy;
+        color: @link-color;
+    }
+}
+
+#intro {
+    .bordered();
+}
+.bordered {
+    border-top: solid 2px @link-color;
+    border-bottom: solid 2px black;
+  }
