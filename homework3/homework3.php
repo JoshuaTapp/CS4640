@@ -1,11 +1,12 @@
 <?php
-    function calculateAverage($scores, $drop) : float {
+    function calculateGrade($scores = [], $drop=false) : float {
+        if(sizeof($scores) < 1) {return 0;}
         $min_score = PHP_FLOAT_MAX;
         $lowest_score = 0;
         $lowest_points = 0;
         $total_points = 0;
         $total_score = 0;
-
+        
         foreach($scores as $grade) {
             if($drop === true) {
                 $temp = $grade["score"] / $grade["max_points"];
@@ -22,10 +23,15 @@
             $total_points -= $lowest_points;
             $total_score -= $lowest_score;
         }
-        return round( ((100 * $total_score) / $total_points), 3);
+        if($total_points !== 0) {
+            return round( ((100 * $total_score) / $total_points), 3);
+        }
+        else {
+            return 0;
+        }
     }
 
-    function gridCorners($width, $height) : string { 
+    function gridCorners($width=0, $height=0) : string { 
 
         if($width > 1 && $height > 1) {
             $bottom_left = 1;
@@ -47,7 +53,7 @@
             sort($corners, SORT_NUMERIC);
             return implode(', ', $corners);
         }
-        else if($width < 1 && $height < 1) {
+        else if($width < 1 || $height < 1) {
             return "";
         }
         else {
@@ -56,34 +62,63 @@
             }
             else {
                 if($width === 1) {
-                    return "1, " . $height;
+                    $width_edge_case = "";
+                    for($i = 1; $i < $height; $i++) {
+                        $width_edge_case = $width_edge_case . "$i, ";
+                    }
+                    $width_edge_case = $width_edge_case . "$height";
+                    return $width_edge_case;
                 }
                 else {
-                    return "1, " . $width;
+                    $height_edge_case = "";
+                    for($i = 1; $i < $width; $i++) {
+                        $height_edge_case = $height_edge_case . "$i, ";
+                    }
+                    $height_edge_case = $height_edge_case . "$width";
+                    return $height_edge_case;
                 }
             }
         }
     }
 
-    function combineShoppingLists($list1, $list2) : array {
+    function combineShoppingLists(...$lists) : array {
         $combined_list = [];
-
-        foreach($list1["list"] as $value) {
-            $combined_list[$value] = [$list1["user"]];    
-        }
-
-        foreach($list2["list"] as $value) {
-            if(isset($combined_list[$value])) {
-                $combined_list[$value][] =  $list2["user"];
-            }
-            else {
-                $combined_list[$value] = [$list2["user"]];
+        foreach($lists as $list) {
+            if(sizeof($list) > 0) {
+                foreach($list["list"] as $value) {
+                    if(isset($combined_list[$value])) {
+                        if(!in_array($list["user"], $combined_list[$value])){
+                            $combined_list[$value][] = $list["user"];                   
+                        }
+                    }
+                    else {
+                        $combined_list[$value] = [$list["user"]];
+                    }
+                }
             }
         }
         ksort($combined_list, SORT_NATURAL);
         return $combined_list;
     }
 
-    function validateEmail($email) : bool {
+    function validateEmail($email, $regex = NULL) : bool {
+        $email_regex = "/^[A-Z|a-z|0-9|\_|\+|\-][A-Za-z0-9\_\.\_\+\-]*[A-Za-z0-9\_\_\+\-][@][A-Za-z0-9\.\-]*[.a-zA-Z]*[A-Za-z]$/";
 
+        $email_bool = preg_match($email_regex, $email);
+        if($regex !== NULL) {
+            $regex_bool = preg_match($regex, $email);
+            if($email_bool === 1 && $regex_bool === 1) {
+                $email_bool = 1;
+            }
+            else {
+                $email_bool = 0;
+            }
+        }
+        if($email_bool === 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        
     }
