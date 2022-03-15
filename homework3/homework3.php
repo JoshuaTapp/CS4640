@@ -101,24 +101,11 @@
         return $combined_list;
     }
 
-    function validateEmail($email, $regex = NULL) : bool {
-        $email_regex = "/^[A-Z|a-z|0-9|\_|\+|\-][A-Za-z0-9\_\.\_\+\-]*[A-Za-z0-9\_\_\+\-][@][A-Za-z0-9\.\-]*[.a-zA-Z]*[A-Za-z]$/";
+    function validateEmail($email, $regex = "//") : bool {
+        $email_regex = "/^[A-Z|a-z|0-9|\_|\+|\-][A-Za-z0-9\_\.\_\+\-]*[A-Za-z0-9\_\_\+\-][@][A-Za-z0-9\.\-]*[.a-zA-Z]*[\.]{1}[A-Za-z]*/";
 
         $email_bool = preg_match($email_regex, $email);
-        if($regex !== NULL) {
-            $regex_bool = preg_match($regex, $email);
-            if($email_bool === 1 && $regex_bool === 1) {
-                $email_bool = 1;
-            }
-            else {
-                $email_bool = 0;
-            }
-        }
-        if($email_bool === 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        $regex_bool = preg_match($regex, $email);
+        return (bool) ($email_bool && $regex_bool);
         
     }

@@ -95,6 +95,17 @@
     echo "<p>FALSE - orange@virginia.edu (with regex): " . validateEmail("orange@virginia.edu", "/^[a-z][a-z][a-z]?[0-9][a-z][a-z]?[a-z]?@virginia.edu$/") . "</p>";
 
     echo "<p>TRUE - orange@blue.com (with regex): " . validateEmail("orange@blue.com", "/^[a-z\.@]+$/") . "</p>";
+
+    echo "<p>TRUE - jh2jf@gmail.com, /^[a-zA-Z0-9.@]+$/: " . validateEmail("jh2jf@gmail.com", "/^[a-zA-Z0-9.@]+$/") . "</p>";
+
+    echo "<p>FALSE - jh44hgmail.c@om, /^[a-zA-Z0-9.@]+$/: " . validateEmail("jh44hgmail.c@om", "/^[a-zA-Z0-9.@]+$/") . "</p>";
+
+    echo "<p>FALSE - john_smith@mit.edu, /^[a-zA-Z0-9.@]+$/: " . validateEmail("john_smith@mit.edu", "/^[a-zA-Z0-9.@]+$/") . "</p>";
+
+
+
+    
+
     
 
 ?>
