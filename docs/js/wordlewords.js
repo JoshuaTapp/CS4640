@@ -176,7 +176,9 @@ function loadStats(stats) {
     gamesPlayed.innerText = stats.gamesPlayed;
     gamesWon.innerText = stats.gamesWon;
     winStreak.innerText = stats.winStreak;
-    avgGuess.innerText = calcAverage(stats.gamesPlayed, stats.guesses);
+    avgGuess.innerText = calcAverage(stats.gamesPlayed, stats.guesses).toFixed(
+      3
+    );
   }
   document.getElementById("stats-div").style.visibility = "visible";
 }
