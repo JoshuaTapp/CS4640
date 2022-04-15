@@ -210,8 +210,12 @@ function startNewGame() {
 if(window.localStorage.getItem("game") !== null) {
     let oldGame = JSON.parse(window.localStorage.getItem("game"));
     stats.gamesPlayed++;
-    stats.winStreak = 0;
     stats.guesses += oldGame.guesses.length;
+    if(oldGame.guesses.length > 0) {
+        if(oldGame.guesses[0] !== oldGame.target) {
+            stats.winStreak = 0;
+        }
+    }
 }
     
 window.localStorage.setItem("stats", JSON.stringify(stats));
