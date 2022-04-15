@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<!--
+Sources used: 
+    https://cs4640.cs.virginia.edu,
+    https://getbootstrap.com/docs/5.0,
+    https://stackoverflow.com/a/46577141,
+    https://www.w3schools.com/jsref/,
+    https://developer.mozilla.org/en-US/docs/Web/API/Storage,
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript,
+    https://bootstrapstudio.io/docs
+-->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -161,11 +171,14 @@
                 name="guess-input"
                 placeholder="enter a word..."
                 autofocus=""
-                required="true"
                 minlength="1"
                 pattern="^[a-zA-Z]*$"
+                title="A guess must be comprised of english lowercase and/or uppercase letters only"
                 id="guess-input-field"
-              /><button
+                required="true"
+              />
+             
+              <button
                 class="btn btn-primary d-flex float-end"
                 data-bss-hover-animate="pulse"
                 type="submit"
