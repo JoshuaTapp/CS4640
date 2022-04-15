@@ -214,7 +214,11 @@ function startNewGame() {
     if (oldGame.guesses.length > 0) {
       if (oldGame.guesses[0] !== oldGame.target) {
         stats.winStreak = 0;
+        stats.guesses = 0;
       }
+    } else {
+      stats.winStreak = 0;
+      stats.guesses = 0;
     }
   }
 
