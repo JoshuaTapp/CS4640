@@ -200,13 +200,25 @@ function calcAverage(gamesPlayed, guesses) {
 }
 
 function startNewGame() {
-  let game = getRandomWord(newGame);
+    document.getElementById("submit-guess").disabled = false;
+    document.getElementById("guess-input-field").disabled = false;
   let stats = JSON.parse(window.localStorage.getItem("stats"));
   if (stats === null) {
     loadUser();
   }
+
+if(window.localStorage.getItem("game") !== null) {
+    let oldGame = JSON.parse(window.localStorage.getItem("game"));
+    stats.gamesPlayed++;
+    stats.winStreak = 0;
+    stats.guesses += oldGame.guesses.length;
+}
+    
+window.localStorage.setItem("stats", JSON.stringify(stats));
+
   document.getElementById("win-alert").style.display = "none";
   deleteAllRows();
+  let game = getRandomWord(newGame);
   saveUser(stats, game);
   loadUser();
   loadStats(stats);
@@ -229,12 +241,16 @@ function checkWord() {
     window.localStorage.setItem("stats", JSON.stringify(stats));
     let alert = document.getElementById("win-alert");
     alert.style.display = "grid";
+    document.getElementById("submit-guess").disabled = true;
+    document.getElementById("guess-input-field").disabled = true;
+    loadStats(stats);
   } else {
     addTableRow(word, game.target);
     input.value = "";
   }
   window.localStorage.setItem("game", JSON.stringify(game));
   document.getElementById("guess-input-field").value = "";
+  
 }
 
 function deleteAllRows() {
@@ -249,6 +265,8 @@ function clearHistory() {
   deleteAllRows();
   document.getElementById("stats-div").style.visibility = "hidden";
   document.getElementById("guess-input-field").value = "";
+startNewGame();
 }
+
 
 loadUser();
