@@ -242,7 +242,7 @@ function checkWord() {
   if (word === game.target) {
     // Game Won, do clean up
     let stats = JSON.parse(window.localStorage.getItem("stats"));
-    stats.gamesPlayed++;
+    //stats.gamesPlayed++;
     stats.gamesWon++;
     stats.winStreak++;
     stats.guesses += game.guesses.length;
