@@ -205,12 +205,11 @@ function startNewGame() {
   let stats = JSON.parse(window.localStorage.getItem("stats"));
   if (stats === null) {
     loadUser();
+    stats = JSON.parse(window.localStorage.getItem("stats"));
   }
-
   if (window.localStorage.getItem("game") !== null) {
     let oldGame = JSON.parse(window.localStorage.getItem("game"));
-    stats.gamesPlayed++;
-    stats.guesses += oldGame.guesses.length;
+    //stats.guesses += oldGame.guesses.length;
     if (oldGame.guesses.length > 0) {
       if (oldGame.guesses[0] !== oldGame.target) {
         stats.winStreak = 0;
@@ -219,6 +218,7 @@ function startNewGame() {
     } else {
       stats.winStreak = 0;
       stats.guesses = 0;
+      stats.gamesPlayed++;
     }
   }
 
@@ -242,7 +242,7 @@ function checkWord() {
   if (word === game.target) {
     // Game Won, do clean up
     let stats = JSON.parse(window.localStorage.getItem("stats"));
-    //stats.gamesPlayed++;
+    stats.gamesPlayed++;
     stats.gamesWon++;
     stats.winStreak++;
     stats.guesses += game.guesses.length;
