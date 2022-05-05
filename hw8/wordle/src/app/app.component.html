@@ -1,0 +1,438 @@
+<div class="container-fluid" style="background: var(--bs-white)">
+  <div class="row g-0">
+    <div class="col offset-0">
+      <section class="py-4 py-xl-5">
+        <div class="container">
+          <div
+            class="
+              bg-light
+              border
+              rounded
+              border-0 border-light
+              d-flex
+              flex-column
+              justify-content-between
+              flex-lg-row
+              p-4 p-md-5
+            "
+            style="
+              background: linear-gradient(var(--bs-primary) 0%, white 31%),
+                var(--bs-white);
+            "
+          >
+            <div class="pb-2 pb-lg-1">
+              <h1 style="padding: 1rem; margin: 0">
+                <i class="fas fa-puzzle-piece" style="padding: 0.5rem"></i
+                >Wordle Clone
+              </h1>
+              <p style="padding: 1rem" title="help me">
+               Welcome to another Wordle Clone. This is a simple clone built with angular!
+               <br>
+               Start a new game by clicking "Start New Game".
+               <br>
+               Reset your game statistics by clicking "Clear History".
+              </p>
+              {{targetWord}}
+            </div>
+            <div
+              class="
+                btn-group-vertical
+                d-grid d-sm-grid d-md-grid
+                align-items-center
+              "
+              role="group"
+              style="color: var(--bs-blue)"
+            >
+              <button
+                class="btn btn-danger text-uppercase text-center py-2 px-4"
+                data-bs-toggle="tooltip"
+                data-bss-tooltip=""
+                data-bss-hover-animate="pulse"
+                type="reset"
+                style="margin: 1rem; padding: 1rem"
+                title="By clicking this, you will delete the current game and history of all past games."
+                id="clear-history"
+                onclick="clearHistory()"
+              >
+                Clear History
+              </button>
+              <button
+                class="btn btn-success text-uppercase text-center"
+                data-bss-hover-animate="pulse"
+                type="reset"
+                style="padding: 1rem; margin: 1rem"
+                id="new-game"
+                (click)="startNewGame()"
+              >
+                Start New Game
+              </button>
+            </div>
+            <div class="my-2"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="container">
+    <div class="col-auto col-xl-6 mx-auto">
+      <form id="word-form" *ngIf="start">
+        <div
+          class="input-group d-flex"
+          style="
+            margin: 0px;
+            padding: 30px;
+            background: linear-gradient(
+                90deg,
+                var(--bs-primary) 32%,
+                var(--bs-gray-100) 100%
+              ),
+              var(--bs-white);
+          "
+          id="guess-input"
+        >
+          <input
+            class="form-control"
+            type="text"
+            name="guess-input"
+            placeholder="enter a word..."
+            autofocus=""
+            minlength="1"
+            pattern="^[a-zA-Z]*$"
+            title="A guess must be comprised of english lowercase and/or uppercase letters only"
+            id="guess-input-field"
+            required="true"
+            [(ngModel)]="guess"
+            name="guess"
+            [disabled]="won"
+          />
+
+          <button
+            class="btn btn-primary d-flex float-end"
+            data-bss-hover-animate="pulse"
+            type="submit"
+            style="margin-left: 0px"
+            id="submit-guess"
+            (click)="checkWord()"
+            [disabled]="won"
+          >
+            Submit <br />
+            Guess
+          </button>
+        </div>
+      </form>
+      <div
+        class="alert alert-success align-content-center fade show p-4"
+        role="alert"
+        id="win-alert"
+        *ngIf="won"
+      >
+        <h4 class="alert-heading">Well done!</h4>
+        <p>
+          Aww yeah, you solved the wordle. Feel free to keep playing by
+          selecting "start new game".
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="
+        row
+        g-0
+        justify-content-center
+        align-items-lg-center align-items-xl-center align-items-xxl-center
+      "
+    >
+      <div class="col-auto"></div>
+      <div
+        class="
+          col-auto
+          d-flex
+          flex-column flex-grow-0 flex-shrink-1
+          justify-content-center
+          align-content-center
+          mx-auto
+          flex-sm-fill flex-md-fill flex-lg-fill
+        "
+      >
+        <div
+          class="
+            text-center
+            d-sm-flex d-md-flex
+            flex-row flex-shrink-1
+            align-items-center align-content-center
+          "
+          style="margin-top: 1rem; margin-bottom: 1rem"
+        >
+          <table class="table table-striped" id="guess-table" *ngIf="start">
+            <thead>
+              <tr>
+                <th
+                  data-bs-toggle="tooltip"
+                  data-bss-tooltip=""
+                  data-bs-placement="left"
+                  title="Each row cell is a previous word you guessed."
+                >
+                  Previous Guess
+                </th>
+                <th
+                  data-bs-toggle="tooltip"
+                  data-bss-tooltip=""
+                  data-bs-placement="left"
+                  title="This is the number of letters in your guess that are in the actual word."
+                >
+                  Correct Letters
+                </th>
+                <th
+                  data-bs-toggle="tooltip"
+                  data-bss-tooltip=""
+                  data-bs-placement="left"
+                  title="This is the number of letters that are in the correct place in the actual word."
+                >
+                  Correct Letter Placement
+                </th>
+                <th
+                  data-bs-toggle="tooltip"
+                  data-bss-tooltip=""
+                  data-bs-placement="left"
+                  title="This describes if your guess was too long, too short, or the same length as the actual word."
+                >
+                  Correct Word Length
+                </th>
+              </tr>
+            </thead>
+            <tbody id="guess-table-body" *ngFor="let row of rows">
+              <tr
+                [ngStyle]="{
+                  'background-color':
+                    row.guess == targetWord ? 'LightGreen' : 'tomato'
+                }"
+              >
+                <td>{{ row.guess }}</td>
+                <td>{{ row.correctLetters }}</td>
+                <td>{{ row.correctPlacement }}</td>
+                <td>{{ row.correctLength }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div
+      class="col d-none d-sm-none d-md-none d-lg-grid d-xl-grid d-xxl-grid"
+    ></div>
+  </div>
+</div>
+<div
+  class="
+    container-fluid
+    d-flex
+    justify-content-center
+    align-items-center
+    my-sm-auto
+    justify-content-xl-center justify-content-xxl-center
+    py-4 py-xl-5
+  "
+  id="stats-div"
+  *ngIf="gamesPlayed"
+>
+  <div
+    class="
+      row
+      gy-4
+      row-cols-1
+      row-cols-sm-2
+      row-cols-md-4
+      row-cols-lg-4
+      row-cols-xl-4
+      row-cols-xxl-4
+    "
+  >
+    <div class="col">
+      <div
+        class="
+          text-center
+          d-flex
+          flex-column
+          justify-content-center
+          align-items-center
+          py-3
+        "
+      >
+        <div
+          class="
+            bs-icon-xl bs-icon-circle bs-icon-primary
+            d-flex
+            flex-shrink-0
+            justify-content-center
+            align-items-center
+            d-inline-block
+            mb-2
+            bs-icon
+            lg
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+            class="bi bi-play"
+          >
+            <path
+              d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"
+            ></path>
+          </svg>
+        </div>
+        <div class="px-3">
+          <h2
+            class="fw-bold mb-0"
+            id="games-played"
+            [ngClass]="'text-secondary'"
+          >
+            {{ gamesPlayed }}
+          </h2>
+          <p class="mb-0">Games Played</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div
+        class="
+          text-center
+          d-flex
+          flex-column
+          justify-content-center
+          align-items-center
+          py-3
+        "
+      >
+        <div
+          class="
+            bs-icon-xl bs-icon-circle bs-icon-primary
+            d-flex
+            flex-shrink-0
+            justify-content-center
+            align-items-center
+            d-inline-block
+            mb-2
+            bs-icon
+            lg
+          "
+        >
+          <i class="fas fa-award"></i>
+        </div>
+        <div class="px-3">
+          <h2
+            class="fw-bold mb-0"
+            id="games-won"
+            [ngClass]="{
+              'text-success': gamesWon > 9,
+              'text-info': gamesWon <= 9 && gamesWon > 4,
+              'text-secondary': winStreak < 5
+            }"
+          >
+            {{ gamesWon }}
+          </h2>
+          <p class="mb-0">Games Won</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div
+        class="
+          text-center
+          d-flex
+          flex-column
+          justify-content-center
+          align-items-center
+          py-3
+        "
+      >
+        <div
+          class="
+            bs-icon-xl bs-icon-circle bs-icon-primary
+            d-flex
+            flex-shrink-0
+            justify-content-center
+            align-items-center
+            d-inline-block
+            mb-2
+            bs-icon
+            lg
+          "
+        >
+          <i class="far fa-star"></i>
+        </div>
+        <div class="px-3">
+          <h2
+            class="fw-bold mb-0"
+            id="win-streak"
+            [ngClass]="{
+              'text-success': winStreak > 4,
+              'text-info': winStreak <= 4 && winStreak > 1,
+              'text-secondary': winStreak < 2
+            }"
+          >
+            {{ winStreak }}
+          </h2>
+          <p class="mb-0">Winning Streak</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div
+        class="
+          text-center
+          d-flex
+          flex-column
+          justify-content-center
+          align-items-center
+          py-3
+        "
+      >
+        <div
+          class="
+            bs-icon-xl bs-icon-circle bs-icon-primary
+            d-flex
+            flex-shrink-0
+            justify-content-center
+            align-items-center
+            d-inline-block
+            mb-2
+            bs-icon
+            lg
+          "
+        >
+          <i class="fas fa-history"></i>
+        </div>
+        <div class="px-3">
+          <h2
+            class="fw-bold mb-0"
+            id="avg-guess"
+            [ngClass]="{
+              'text-success': avgGuess < 2.0 && avgGuess >= 1.0,
+              'text-secondary':
+                (avgGuess < 3.0 && avgGuess >= 2.0) || avgGuess == 0,
+              'text-danger': avgGuess >= 3.0
+            }"
+          >
+            {{ avgGuess | number: "1.0-2" }}
+          </h2>
+          <p class="mb-0">Average Guesses/Game</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/bs-init.js"></script>
+    <script src="js/wordlewords.js"></script>
+    <script>
+      function handleSubmit(event) {
+        event.preventDefault();
+        checkWord();
+      }
+      let input = document.getElementById("word-form");
+      input.addEventListener("submit", handleSubmit);
+    </script> -->
